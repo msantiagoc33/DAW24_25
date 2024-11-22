@@ -3,7 +3,17 @@
 @section('title', 'Roles')
 
 @section('content_header')
+    <style>
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #cce5ff;
+            /* Azul claro */
+        }
 
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white;
+            /* Blanco */
+        }
+    </style>
 @stop
 
 @section('content')
@@ -39,11 +49,12 @@
                                     </td>
 
                                     <td class="text-center" width='10px'>
-                                        <form action="{{ route('roles.destroy', $rol) }}" method="POST" style="display:inline;">
+                                        <form action="{{ route('roles.destroy', $rol) }}" method="POST" style="display:inline;"
+                                            id="delete-form-{{ $rol->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este rol?');"
+
+                                            <button type="button" onclick="confirmDelete({{ $rol->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
                                                 <i class="fas fa-fw fa-trash"></i>
                                             </button>
@@ -61,7 +72,7 @@
             </div>
         @endif
     @else
-        @include('admin.index');    
+        @include('admin.index');
     @endcan
 
 @stop
@@ -71,5 +82,22 @@
 @stop
 
 @section('js')
-
+    <script>
+        function confirmDelete(rolId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + rolId).submit();
+                }
+            });
+        }
+    </script>
 @stop

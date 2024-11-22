@@ -1,4 +1,15 @@
 <div>
+    <style>
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #cce5ff;
+            /* Azul claro */
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: white;
+            /* Blanco */
+        }
+    </style>
     @can('Administrador')
         <h1>Lista de usuarios</h1>
         @if ($users->count())
@@ -14,11 +25,11 @@
                     <input wire:model.live='search' class="form-control" placeholder="Buscar por nombre o correo">
                 </div>
                 <div class="card-body">
-                    <table class="table  table-striped">
+                    <table class="table table-striped table-bordered">
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
-                            <th colspan="3">Acciones</th>
+                            <th colspan="3" class="text-center">Acciones</th>
 
                         </tr>
 
@@ -37,11 +48,10 @@
                                 </td>
                                 <td class="text-center" width='10px'>
                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                        style="display:inline;">
+                                        style="display:inline;" id="delete-form-{{ $user->id }}">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
+                                        <button type="button" onclick="confirmDelete({{ $user->id }})"
                                             style="border:none; background:none; color:rgb(25, 134, 236);">
                                             <i class="fas fa-fw fa-trash"></i>
                                         </button>
@@ -69,5 +79,23 @@
         @endphp
         <h1>{{ $corto }} no tiene permisos para ver los usuarios.</h1>
     @endcan
-
+    <script>
+        function confirmDelete(userId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario
+                    document.getElementById('delete-form-' + userId).submit();
+                }
+            });
+        }
+    </script>
 </div>

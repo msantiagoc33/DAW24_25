@@ -192,6 +192,7 @@
             <td>Suma el total de esta consulta: <strong>{{ number_format($totalImporte, 2) }} €</strong></td>
         @endif
     </div>
+    
     <!-- SweetAlert2 JS para la confirmación de eliminación -->
     <script>
         function confirmDelete(facturaId) {

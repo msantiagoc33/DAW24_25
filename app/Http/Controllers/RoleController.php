@@ -125,8 +125,9 @@ class RoleController extends Controller
         return redirect()->route('roles.rolesAsignados')->with('success', 'Rol asignado con exito.');
     }
 
-    public function destroy()
+    public function destroy(Role $rol)
     {
-        //
+        $rol->delete();
+        return redirect()->route('roles.index')->with('success', 'Rol eliminado.');
     }
 }

@@ -41,11 +41,11 @@
 
                                     <td class="text-center" width='10px'>
                                         <form action="{{ route('admin.platforms.destroy', $platform) }}" method="POST"
-                                            style="display:inline;">
+                                            style="display:inline;" id="delete-form-{{ $platform->id }}">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta plataforma ?');"
+
+                                            <button type="button" onclick="confirmDelete({{ $platform->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
                                                 <i class="fas fa-fw fa-trash"></i>
                                             </button>
@@ -76,4 +76,22 @@
 @stop
 
 @section('js')
+    <script>
+        function confirmDelete(plataformaId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + plataformaId).submit();
+                }
+            });
+        }
+    </script>
 @stop

@@ -11,10 +11,9 @@ class ClientsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): \Illuminate\View\View
     {
-        $clients = Client::all();
-        return view('admin.clients.index', compact('clients'));
+        return view('admin.clients.index');
     }
 
     /**

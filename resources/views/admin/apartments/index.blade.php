@@ -50,8 +50,8 @@
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit"
-                                                onclick="return confirm('¿Estás seguro de que deseas eliminar este usuario?');"
+
+                                            <button type="button" onclick="confirmDelete({{ $apartment->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
                                                 <i class="fas fa-fw fa-trash"></i>
                                             </button>
@@ -79,5 +79,23 @@
 @stop
 
 @section('js')
-
+<script>
+    function confirmDelete(apartamentoId) {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "Esta acción no se puede deshacer.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario confirma, enviar el formulario
+                document.getElementById('delete-form-' + apartamentoId).submit();
+            }
+        });
+    }
+</script>
 @stop

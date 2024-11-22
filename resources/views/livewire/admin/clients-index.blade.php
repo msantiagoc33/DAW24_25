@@ -40,7 +40,7 @@
         @endif
     </div>
 
-    @if ($apartamento && $apartamento->facturas->isNotEmpty())
+    @if ($apartamento && $apartamento->facturas->isNotEmpty()) 
 
         <div class="card">
 

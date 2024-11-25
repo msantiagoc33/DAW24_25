@@ -5,62 +5,92 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Client;
+use App\Models\Country;
+use Illuminate\Contracts\View\View;
 
 class ClientsController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra una lista de clientes utilizando un compoente Livewire.
      */
-    public function index(): \Illuminate\View\View
-    {
+    public function index():View
+    {        
         return view('admin.clients.index');
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Crea un nuevo cliente.
      */
-    public function create()
+    public function create():View
     {
-        //
+        $countries = Country::all();
+        return view('admin.clients.create', compact('countries'));    
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un nuevo cliente en la base de datos.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'nullable',
+            'calle_numero' => 'nullable',
+            'ciudad' => 'nullable',
+            'provincia' => 'nullable',
+            'cp' => 'nullable',
+            'passport' => 'nullable',
+            'country_id' => 'required',
+        ]);
+
+        Client::create($request->all());
+        return redirect()->route('admin.clients.index');
     }
 
     /**
-     * Display the specified resource.
+     * Muestra un cliente en particular.
      */
-    public function show(string $id)
+    public function show(Client $client):View
     {
-        //
+        return view('admin.clients.show',compact('client'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Edita un cliente en particular.
      */
-    public function edit(string $id)
+    public function edit(Client $client):View
     {
-        //
+        $countries = Country::all();
+        return view('admin.clients.edit', compact('client','countries'));
+    }
+
+
+    /**
+     * Actualiza un cliente en particular.
+     */
+    public function update(Request $request, Client $client)
+    {
+        $request->validate([
+            'name' => 'required',
+            'phone' => 'nullable',
+            'calle_numero' => 'nullable',
+            'ciudad' => 'nullable',
+            'provincia' => 'nullable',
+            'cp' => 'nullable',
+            'passport' => 'nullable',
+            'country_id' => 'required',
+        ]);
+
+        $client->update($request->all());
+        return redirect()->route('admin.clients.index');
     }
 
     /**
-     * Update the specified resource in storage.
+     * Elimina un cliente en particular.
      */
-    public function update(Request $request, string $id)
+    public function destroy(Client $client)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $client->delete();
+        return redirect()->route('admin.clients.index');
     }
 }

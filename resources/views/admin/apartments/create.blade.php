@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Apartments-index')
+@section('title', 'Apartments-Crear')
 
 @section('content_header')
 
@@ -10,11 +10,18 @@
 @section('content')
     @can('Administrador')
         <br>
-        @if (session('info'))
-            <div class="alert alert-success">
-                <strong>{{ session('info') }}</strong>
-            </div>
-        @endif
+        <div class="erroresMensajes">
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            @if (session('success'))
+                <div class="alert alert-success">
+                    <strong>{{ session('success') }}</strong>
+                </div>
+            @endif
+        </div>
         <div class="card">
             <div class="card-header">
                 <h2>Dar de alta a un nuevo apartamento.</h2>

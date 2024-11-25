@@ -1,8 +1,8 @@
 <div>
 
-    <style>
+    {{-- <style>
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #cce5ff;
+            background-color: #3f9fef;
             /* Azul claro */
         }
 
@@ -10,7 +10,7 @@
             background-color: white;
             /* Blanco */
         }
-    </style>
+    </style> --}}
 
     {{-- Errores --}}
     <div class="erroresMensajes">
@@ -37,18 +37,18 @@
         @endif
     </div>
 
-    @if ($clients->isEmpty())
-        <h2>No hay clientes registradors.</h2>
+    @if ($reservas->isEmpty())
+        <h2>No hay reservas registradas.</h2>
     @else
         <div class="card">
             <div class="card-header">
                 @can('Administrador')
-                    <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.clients.create') }}">Nuevo
-                        cliente</a>
+                    <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
+                        reserva</a>
                 @endcan
 
                 @can('Consultor')
-                    <h1>Listado de clientes</h1>
+                    <h1>Listado de reservas</h1>
                 @else
                     @php
                         $nombre = auth()->user()->name; // Obtener el nombre del usuario
@@ -62,65 +62,73 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th class="text-center">ID</th>
-                            <th class="text-center">Nombre</th>
-                            <th class="text-center">Teléfono</th>
-                            <th class="text-center">Dirección</th>
-                            <th class="text-center">DNI</th>
-                            <th class="text-center">Pais</th>
+                            <th class="text-center align-middle" scope="col">#</th>
+                            <th class="text-center align-middle" scope="col">ENTRADA</th>
+                            <th class="text-center align-middle" scope="col">SALIDA</th>
+                            <th class="text-center align-middle" scope="col">DÍAS PARA ENTRAR</th>
+                            <th class="text-center align-middle" scope="col">DÍAS PARA SALIR</th>
+                            <th class="text-center align-middle" scope="col"><h4><i class="fa-solid fa-building"></i></h4></th>
+                            <th class="text-center align-middle" scope="col"><h4><i class="fa-solid fa-users"></i></h4></th>
+                            <th class="text-center align-middle" scope="col">NOMBRE</th>
+
                             @can('Administrador')
-                                <th class="text-center" colspan="3">Acciones</th>
+                                <th class="text-center align-middle" colspan="3" scope="col">ACCIONES</th>
                             @elsecan('Consultor')
-                                <th class="text-center" colspan="1">Acción</th>
+                                <th class="text-center align-middle" colspan="1" scope="col">ACCIÓN</th>
                             @endcan
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($clients as $cliente)
-                            <tr>
-                                <td class="text-center" style="width: 5%">{{ $cliente->id }}</td>
-                                <td class="text-left ml-2" style="width: 15%">{{ $cliente->name }}</td>
-                                <td class="text-center ml-2" style="width: 8%">{{ $cliente->phone }}</td>
-                                <td class="text-left ml-2" style="width: 30%">
-                                    {{ $cliente->calle_numero }}, {{ $cliente->cp }} {{ $cliente->ciudad }},
-                                    ({{ $cliente->provincia }})
-                                </td>
-                                <td class="text-center ml-2" style="width: 8%">{{ $cliente->passport }}</td>
-                                <td class="text-center ml-2" style="width: 15%">{{ $cliente->pais->nombre }}</td>
-                                {{-- Verifica si country no es null antes de acceder a la propiedad nombre --}}
+                        @foreach ($reservas as $reserva)
+                            @php
+                                $diasParaEntrar = abs($reserva->fechaEntrada->diffInDays($hoy, false));
+                                $diasParaSalir = abs($reserva->fechaSalida->diffInDays($hoy, false));
+                                $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false);
 
-                                <td class="text-center">
-                                    <a href="{{ route('admin.clients.show', $cliente->id) }}"><i
-                                            class="fas fa-fw fa-regular fa-eye"></i></a>
-                                </td>
+                            @endphp
+                            <tr style="background-color: {{ $reserva->fechaEntrada <= $hoy ? '#3bb841' : '' }}">
+                                <td class="text-center" style="width: 5%">{{ ++$indiceReservas }}</td>
+                                <td class="text-center" style="width: 8%">{{ $reserva->fechaEntrada->format('d-m-Y'); }}</td>
+                                <td class="text-center" style="width: 8%">{{ $reserva->fechaSalida->format('d-m-Y'); }}</td>
+                                <td class="text-center" style="width: 8%">{{ $diasParaEntrar }}</td>
+                                <td class="text-center" style="width: 8%">{{ $diasParaSalir }}</td>
+                                <td class="text-center" style="width: 8%">{{ $diasDentro }}</td>
+                                <td class="text-center" style="width: 8%">{{ $reserva->huespedes }}</td>
+                                <td class="text-left ml-2" style="width: 35%">{{ $reserva->client->name }}</td>
 
+                                @can('Consultor')
+                                    <td class="text-center">
+                                        <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
+                                                class="fas fa-fw fa-eye"></i></a>
+                                    </td>
+                                @endcan
+                                
                                 @can('Administrador')
                                     <td class="text-center">
-                                        <a href="{{ route('admin.clients.edit', $cliente->id) }}"><i
+                                        <a href="{{ route('admin.bookings.edit', $reserva->id) }}"><i
                                                 class="fas fa-fw fa-regular fa-pen"></i></a>
                                     </td>
 
                                     <td class="text-center" width='auto'>
-                                        <form action="{{ route('admin.clients.destroy', $cliente) }}" method="POST"
-                                            style="display:inline;" id="delete-form-{{ $cliente->id }}">
+                                        <form action="{{ route('admin.bookings.destroy', $reserva) }}" method="POST"
+                                            style="display:inline;" id="delete-form-{{ $reserva->id }}">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="button" onclick="confirmDelete({{ $cliente->id }})"
+                                            <button type="button" onclick="confirmDelete({{ $reserva->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
                                                 <i class="fas fa-fw fa-trash"></i>
                                             </button>
                                         </form>
                                     </td>
                                 @endcan
-
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
             <div class="card-footer">
-                <div class="mt-3">{{ $clients->links() }}</div>
+                <div class="mt-3">{{ $reservas->links() }}</div>
             </div>
         </div>
     @endif

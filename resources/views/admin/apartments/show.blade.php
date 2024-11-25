@@ -3,7 +3,7 @@
 @section('title', 'Apartment-show')
 
 @section('content_header')
-    
+
 @stop
 
 @section('content')
@@ -12,8 +12,11 @@
             <div class="card-header">
                 <h2 class="text-center">Ficha del apartamento</h2>
             </div>
-            <div class="card-body bg-slate-400">
-                <h3>{{ $apartment->address }}</h3>
+
+            <div class="card-body" style='background-color: #a1c8e2;'>
+                <h2><i>{{ $apartment->name }}</i></h2>
+                <hr>
+                <h3>{{ $apartment->address }}</h3>               
                 <h3>{{ $apartment->description }}</h3>
                 <h3>Habitaciones: {{ $apartment->rooms }}</h3>
                 <h3>Capacidad: {{ $apartment->capacidad }}</h3>

@@ -304,6 +304,12 @@ return [
             'topnav_right' => false,
         ],
         [
+            'text' => 'Reservas',
+            'route' => 'admin.bookings.index',
+            'icon' => 'fas fa-fw fa-address-book',
+            'can' => 'Consultor',
+        ], 
+        [
             'text' => 'Usuarios',
             'route' => 'admin.users.index',
             'icon' => 'fas fa-users fa-fw',
@@ -318,7 +324,7 @@ return [
         [
             'text' => 'Apartamentos',
             'route' => 'admin.apartments.index',
-            'icon' => 'fas fa-fw fa-house-user',
+            'icon' => 'fa-solid fa-building',
         ],
         [
             'text' => 'Plataformas',
@@ -340,15 +346,7 @@ return [
             'route' => 'admin.facturas.index',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
         ],  
-        [
-            'text' => 'Reservas',
-            'url' => 'admin.bookings.index',
-            'icon' => 'fas fa-fw fa-address-book',
-            'can' => 'Consultor',
-
-        ],   
-       
-        
+         
     ],
 
     /*

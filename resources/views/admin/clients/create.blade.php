@@ -29,10 +29,9 @@
             </div>
             <form method="POST" action="{{ route('admin.clients.store') }}">
                 @csrf
-
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="row">
+                        <div class="row"> 
                             <div class="col-md-6">
                                 <input type="text" name="name" class="form-control custom-input" placeholder="Nombre"
                                     value="{{ old('name') }}" required autofocus
@@ -136,12 +135,7 @@
 @stop
 
 @section('css')
-    <style>
-        .custom-input:focus {
-            background-color: #cce5ff;
-            outline: none;
-        }
-    </style>
+
 @stop
 
 @section('js')

@@ -15,10 +15,10 @@
                     <input wire:model="search" class="form-control" placeholder="Buscar">
                 </div>
                 <div class="card-body">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-bordered">
                         <tr>
                             <th>Nombre</th>
-                            <th colspan="3">Acciones</th>
+                            <th colspan="3" class="text-center">Acciones</th>
                         </tr>
                         @foreach ($conceptos as $concepto)
                             <tr>

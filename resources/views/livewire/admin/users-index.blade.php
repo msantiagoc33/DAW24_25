@@ -1,15 +1,5 @@
 <div>
-    <style>
-        .table-striped tbody tr:nth-of-type(even) {
-            background-color: #cce5ff;
-            /* Azul claro */
-        }
 
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: white;
-            /* Blanco */
-        }
-    </style>
     @can('Administrador')
         <h1>Lista de usuarios</h1>
         @if ($users->count())

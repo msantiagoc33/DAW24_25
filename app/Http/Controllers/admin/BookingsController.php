@@ -7,6 +7,8 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Client;
 use App\Models\Country;
+use App\Models\Platform;
+use App\Models\Apartment;
 use Illuminate\Contracts\View\View;
 
 class BookingsController extends Controller
@@ -24,10 +26,11 @@ class BookingsController extends Controller
      */
     public function create(): View
     {
-        return view('admin.bookings.create', [
-            'clients' => Client::all(),
-            'countries' => Country::all(),
-        ]);
+        $clientes = Client::orderBy('name')->get();
+        $plataformas = Platform::all();
+        $apartamentos = Apartment::all();
+
+        return view('admin.bookings.create', compact('clientes', 'plataformas', 'apartamentos'));
     }
 
     /**
@@ -35,7 +38,32 @@ class BookingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'fechaEntrada' => 'required',
+            'fechaSalida' => 'required',
+            'huespedes' => 'required',
+            'importe' => 'required',
+            'comentario' => 'nullable',
+            'platform_id' => 'required',
+            'client_id' => 'required',
+            'apartment_id' => 'required',
+        ]);
+
+        // Crear la reserva
+        $reserva = new Booking();
+        $reserva->fechaEntrada = $request->fechaEntrada;
+        $reserva->fechaSalida = $request->fechaSalida;
+        $reserva->huespedes = $request->huespedes;
+        $reserva->importe = $request->importe;
+        $reserva->comentario = $request->comentario;
+        $reserva->platform_id = $request->platform_id;
+        $reserva->client_id = $request->client_id;
+        $reserva->apartment_id = $request->apartment_id;
+        $reserva->user_id = auth()->id(); // Asignar el usuario conectado
+        $reserva->save();
+
+        return redirect()->route('admin.bookings.index')->with('success', 'Reserva creada con éxito.');
     }
 
     /**
@@ -43,7 +71,7 @@ class BookingsController extends Controller
      */
     public function show(Booking $booking)
     {
-        //
+        return view('admin.bookings.show', compact('booking'));
     }
 
     /**

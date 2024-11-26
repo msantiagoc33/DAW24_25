@@ -3,17 +3,7 @@
 @section('title', 'Apartments-index')
 
 @section('content_header')
-<style>
-    .table-striped tbody tr:nth-of-type(even) {
-        background-color: #cce5ff;
-        /* Azul claro */
-    }
 
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: white;
-        /* Blanco */
-    }
-</style>
 @stop
 
 @section('content')
@@ -27,7 +17,7 @@
                     @endcan
                 </div>
                 <div class="card-body">
-                    <table class="table  table-striped">
+                    <table class="table table-striped table-bordered">
                         <tr>
                             <th class="text-center">Nombre</th>
                             <th class="text-center">Dirección</th>

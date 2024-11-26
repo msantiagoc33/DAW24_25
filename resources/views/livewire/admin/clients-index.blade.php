@@ -1,17 +1,4 @@
 <div>
-
-    <style>
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #cce5ff;
-            /* Azul claro */
-        }
-
-        .table-striped tbody tr:nth-of-type(even) {
-            background-color: white;
-            /* Blanco */
-        }
-    </style>
-
     {{-- Errores --}}
     <div class="erroresMensajes">
         @if ($errors->any())

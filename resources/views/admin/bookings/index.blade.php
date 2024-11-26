@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Admin-index')
+@section('title', 'Reservas-index')
 
 @section('content_header')
     <br>

@@ -44,7 +44,7 @@ class ClientsController extends Controller
         ]);
 
         Client::create($request->all());
-        return redirect()->route('admin.clients.index');
+        return redirect()->route('admin.bookings.create');
     }
 
     /**

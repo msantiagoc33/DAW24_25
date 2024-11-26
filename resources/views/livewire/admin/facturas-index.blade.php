@@ -137,16 +137,16 @@
                     </thead>
                     @foreach ($facturas as $factura)
                         <tr>
-                            <td class="text-center" style="width: 5%">{{ $factura->id }}</td>
-                            <td class="text-nowrap text-center" style="width: 10%">{{ $factura->fecha }}</td>
-                            <td class="text-right mr-3" style="width: 10%">{{ $factura->importe }}</td>
-                            <td style="width: 30%">
+                            <td class="text-center align-middle" style="width: 5%">{{ $factura->id }}</td>
+                            <td class="text-nowrap text-center align-middle" style="width: 10%">{{ $factura->fecha }}</td>
+                            <td class="text-right mr-3 align-middle" style="width: 10%">{{ $factura->importe }}</td>
+                            <td style="width: 30%" class="align-middle">
                                 @foreach ($factura->concepts as $concept)
                                     {{ $concept->name }}{{ !$loop->last ? ', ' : '' }}
                                 @endforeach
                             </td>
-                            <td>{{ $factura->notas }}</td>
-                            <td class="text-center"style="width: 15%">
+                            <td class="align-middle">{{ $factura->notas }}</td>
+                            <td class="text-center align-middle"style="width: 15%">
                                 @if ($factura->file_uri)
                                     <a href="{{ Storage::url($factura->file_uri) }}" target="_blank"
                                         class="btn btn-info" title="Ver Factura">
@@ -157,12 +157,12 @@
                                 @endif
                             </td>
                             @can('Administrador')
-                                <td class="text-center" width='10px'>
+                                <td class="text-center align-middle" width='10px'>
                                     <a href="{{ route('admin.facturas.edit', $factura->id) }}"><i
                                             class="fas fa-fw fa-regular fa-pen"></i></a>
                                 </td>
 
-                                <td class="text-center" width='10px'>
+                                <td class="text-center align-middle" width='10px'>
                                     <form action="{{ route('admin.facturas.destroy', $factura) }}" method="POST"
                                         style="display:inline;" id="delete-form-{{ $factura->id }}">
                                         @csrf

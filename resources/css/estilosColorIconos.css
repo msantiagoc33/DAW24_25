@@ -1,0 +1,17 @@
+td a i {
+    color: #0a0a0a !important;
+}
+
+td button i {
+    color: #0a0a0a !important;
+}
+
+.bg-azul-claro {
+    background-color: #3f9fef !important;
+}
+
+/* le da un color azul claro a los input cuando están en focus */
+.custom-input:focus {
+    background-color: #cce5ff;
+    outline: none;
+}

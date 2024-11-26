@@ -1,0 +1,10 @@
+/* Estilos para los registros de las tabla */
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #3f9fef;
+    /* Azul claro */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: white;
+    /* Blanco */
+}

@@ -38,15 +38,10 @@ class BookingsIndex extends Component
         }
     }
 
-    public function updatedSelectedApartment()
-    {
-        // Este método se llama automáticamente al cambiar el valor de selectedApartment
-        logger('Selected Apartment ID: ' . $this->selectedApartment);
-    }
-
 
     public function render()
     {
+        // Obtener el nombre del apartamento seleccionado
         $this->nombreApartamento = Apartment::find($this->selectedApartment)->name;
 
         $reservas = Booking::where('historico', false)

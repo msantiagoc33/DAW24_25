@@ -1,4 +1,6 @@
 <div>
+   
+
     {{-- Errores --}}
     <div class="erroresMensajes">
         @if ($errors->any())
@@ -35,7 +37,8 @@
             @can('Consultor')
                 <h1>Listado de reservas del apartamento: <strong>{{ $nombreApartamento }}</strong></h1>
                 <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                <select wire:model.live='selectedApartment' class="form-control form-select bg-azul-claro text-black">
+                <select wire:model.live='selectedApartment' id="selectedApartment"
+                    class="form-control form-select bg-azul-claro text-white">
                     <option value="">Selecciona un apartamento ...</option>
                     @foreach ($apartamentos as $apartamento)
                         <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
@@ -137,6 +140,8 @@
         @else
             <h2 class="text-center">No hay reservas para este apartamento.</h2>
         @endcan
+
+        <div id="calendar"></div>
 </div>
 
 <!-- SweetAlert2 JS para la confirmación de eliminación -->
@@ -158,5 +163,8 @@
             }
         });
     }
+    
+</script>
+
 </script>
 </div>

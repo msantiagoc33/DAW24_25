@@ -310,6 +310,12 @@ return [
             'can' => 'Consultor',
         ], 
         [
+            'text' => 'Calendario',
+            'route' => 'calendar.index',
+            'icon' => 'fa-solid fa-calendar-days',
+            'can' => 'Consultor',
+        ], 
+        [
             'text' => 'Usuarios',
             'route' => 'admin.users.index',
             'icon' => 'fas fa-users fa-fw',

@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Client;
-use App\Models\Country;
 use App\Models\Platform;
 use App\Models\Apartment;
 use Illuminate\Contracts\View\View;
+
+use function Pest\Laravel\delete;
 
 class BookingsController extends Controller
 {
@@ -79,11 +80,11 @@ class BookingsController extends Controller
      */
     public function edit(Booking $booking): View
     {
-        return view('admin.bookings.edit', [
-            'booking' => $booking,
-            'clients' => Client::all(),
-            'countries' => Country::all(),
-        ]);
+        $clientes = Client::all();
+        $plataformas = Platform::all();
+        $apartamentos = Apartment::all(); 
+
+        return view('admin.bookings.edit', compact('booking', 'clientes', 'plataformas', 'apartamentos'));
     }
 
     /**
@@ -91,7 +92,29 @@ class BookingsController extends Controller
      */
     public function update(Request $request, Booking $booking)
     {
-        //
+        $request->validate([
+            'fechaEntrada' => 'required',
+            'fechaSalida' => 'required',
+            'huespedes' => 'required',
+            'importe' => 'required',
+            'comentario' => 'nullable',
+            'platform_id' => 'required',
+            'client_id' => 'required',
+            'apartment_id' => 'required',
+        ]);
+
+        $booking->fechaEntrada = $request->fechaEntrada;
+        $booking->fechaSalida = $request->fechaSalida;
+        $booking->huespedes = $request->huespedes;
+        $booking->importe = $request->importe;
+        $booking->comentario = $request->comentario;
+        $booking->platform_id = $request->platform_id;
+        $booking->client_id = $request->client_id;
+        $booking->apartment_id = $request->apartment_id;
+        $booking->user_id = auth()->id(); // Asignar el usuario conectado
+        $booking->save();
+
+        return redirect()->route('admin.bookings.index')->with('success', 'Reserva actualizada con éxito.');
     }
 
     /**
@@ -99,6 +122,7 @@ class BookingsController extends Controller
      */
     public function destroy(Booking $booking)
     {
-        //
+        $booking->delete();
+        return redirect()->route('admin.bookings.index')->with('success', 'Reserva eliminada con éxito.');
     }
 }

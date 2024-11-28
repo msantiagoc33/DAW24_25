@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\PlatformsController;
 use App\Http\Controllers\Admin\FacturasController;
 use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\BookingsController;
+use App\Http\Controllers\CalendarController;
 
 // Route::get('/', [HomeController::class, 'index'])->name('admin.home');
 Route::get('', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
@@ -24,5 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::get('facturas.busqueda', [FacturasController::class, 'busqueda'])->name('admin.facturas.busqueda');
     Route::resource('clients', ClientsController::class)->names('admin.clients');  
     Route::resource('bookings', BookingsController::class)->names('admin.bookings');
+    Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 });

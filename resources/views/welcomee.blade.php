@@ -26,10 +26,10 @@
                         {{-- Aquí es dónde tengo que poner la condición de que si es el administrador, que carge adminlte y si no que carge el menu normal --}}
                         <nav class="-mx-3 flex flex-1 justify-end">
                             @auth
-                                <a href="{{ url('/dashboard') }}"
+                                {{-- <a href="{{ url('/dashboard') }}"
                                     class="text-xl rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
                                     Manú principal
-                                </a>
+                                </a> --}}
                             @else
                                 <a href="{{ route('login') }}"
                                     class="text-xl rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">

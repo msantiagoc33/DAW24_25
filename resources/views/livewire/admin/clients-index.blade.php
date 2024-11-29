@@ -46,7 +46,7 @@
             </div>
 
             <div class="card-body">
-                <table class="table table-striped table-bordered">
+                <table class="table table-striped table-bordered table-sm">
                     <thead>
                         <tr>
                             <th class="text-center">ID</th>
@@ -64,17 +64,33 @@
                     </thead>
                     <tbody>
                         @foreach ($clients as $cliente)
-                            <tr>
+                            <tr class="p-50">
                                 <td class="text-center" style="width: 5%">{{ $cliente->id }}</td>
-                                <td class="text-left ml-2" style="width: 15%">{{ $cliente->name }}</td>
-                                <td class="text-center ml-2" style="width: 8%">{{ $cliente->phone }}</td>
-                                <td class="text-left ml-2" style="width: 30%">
-                                    {{ $cliente->calle_numero }}, {{ $cliente->cp }} {{ $cliente->ciudad }},
-                                    ({{ $cliente->provincia }})
+                                <td class="text-left ml-2 text-nowrap" style="width: 15%">{{ $cliente->name }}</td>
+                                <td class="text-center ml-2 text-nowrap" style="width: 8%">{{ $cliente->phone }}</td>
+                                @if ($cliente->calle_numero)
+                                    {{-- Si hay dirección  --}}
+                                    <td class="text-left ml-2" style="width: 30%">
+                                        {{ $cliente->calle_numero }}
+                                        @if ($cliente->cp)
+                                            , {{ $cliente->cp }}
+                                        @endif
+                                        @if ($cliente->ciudad)
+                                            , {{ $cliente->ciudad }}
+                                        @endif
+                                        @if ($cliente->provincia)
+                                            ({{ $cliente->provincia }})
+                                        @endif
+                                    </td>
+                                @else
+                                    <td class="text-center ml-2" style="width: 30%">
+                                        Sin dirección
+                                    </td>
+                                @endif
+
                                 </td>
                                 <td class="text-center ml-2" style="width: 8%">{{ $cliente->passport }}</td>
                                 <td class="text-center ml-2" style="width: 15%">{{ $cliente->pais->nombre }}</td>
-                                {{-- Verifica si country no es null antes de acceder a la propiedad nombre --}}
 
                                 <td class="text-center">
                                     <a href="{{ route('admin.clients.show', $cliente->id) }}"><i

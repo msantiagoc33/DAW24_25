@@ -8,7 +8,7 @@ use App\Models\Apartment;
 
 use Livewire\WithPagination;
 
-class BookingsIndex extends Component
+class HistoricoIndex extends Component
 {
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
@@ -43,11 +43,13 @@ class BookingsIndex extends Component
         // Obtener el nombre del apartamento seleccionado
         $this->nombreApartamento = Apartment::find($this->selectedApartment)->name;
 
-        $reservas = Booking::where('historico', false)
+        $reservas = Booking::where('historico', true)
             ->where('apartment_id',  $this->selectedApartment)
             ->orderBy('fechaEntrada', 'asc')
-            ->paginate(5);
+            ->paginate(8);
 
-        return view('livewire.admin.bookings-index', compact('reservas'));
+        return view('livewire.admin.historico-index', compact('reservas'));
     }
 }
+
+

@@ -10,7 +10,6 @@ use App\Models\Platform;
 use App\Models\Apartment;
 use Illuminate\Contracts\View\View;
 
-use function Pest\Laravel\delete;
 
 class BookingsController extends Controller
 {
@@ -22,12 +21,17 @@ class BookingsController extends Controller
         return view('admin.bookings.index');
     }
 
+    public function historico(): View
+    {
+        return view('admin.bookings.historico');
+    }
+
     /**
      * Crear una nueva reserva
      */
     public function create(): View
     {
-        $clientes = Client::orderBy('name')->get();
+        $clientes = Client::orderBy('id', 'desc')->get();
         $plataformas = Platform::all();
         $apartamentos = Apartment::all();
 

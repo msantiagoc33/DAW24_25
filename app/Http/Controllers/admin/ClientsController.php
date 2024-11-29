@@ -13,18 +13,18 @@ class ClientsController extends Controller
     /**
      * Muestra una lista de clientes utilizando un compoente Livewire.
      */
-    public function index():View
-    {        
+    public function index(): View
+    {
         return view('admin.clients.index');
     }
 
     /**
      * Crea un nuevo cliente.
      */
-    public function create():View
+    public function create(): View
     {
         $countries = Country::all();
-        return view('admin.clients.create', compact('countries'));    
+        return view('admin.clients.create', compact('countries'));
     }
 
     /**
@@ -44,24 +44,25 @@ class ClientsController extends Controller
         ]);
 
         Client::create($request->all());
+
         return redirect()->route('admin.bookings.create');
     }
 
     /**
      * Muestra un cliente en particular.
      */
-    public function show(Client $client):View
+    public function show(Client $client): View
     {
-        return view('admin.clients.show',compact('client'));
+        return view('admin.clients.show', compact('client'));
     }
 
     /**
      * Edita un cliente en particular.
      */
-    public function edit(Client $client):View
+    public function edit(Client $client): View
     {
         $countries = Country::all();
-        return view('admin.clients.edit', compact('client','countries'));
+        return view('admin.clients.edit', compact('client', 'countries'));
     }
 
 

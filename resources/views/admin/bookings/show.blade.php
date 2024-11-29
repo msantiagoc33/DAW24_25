@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-header">
                 <h1>Ficha de reserva en <strong class="ml-2 text-primary">{{ $booking->apartment->name }}</strong></h1>
-                <h2>Grabado por <strong class="ml-2 text-success">{{ $booking->user->name}}</strong></h2>
+                <h2>Grabado por <strong class="ml-2 text-success">{{ $booking->user->name }}</strong></h2>
             </div>
 
 
@@ -34,7 +34,7 @@
                             <label for="">Plataforma</label>
                             <input value="{{ $booking->platform->name }}" class="form-control custom-input" readonly>
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -86,7 +86,11 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">Volver</a>
+                @if ($booking->historico == 0)
+                    <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">Volver</a>
+                @else
+                    <a href="{{ route('admin.bookings.historico') }}" class="btn btn-secondary btn-sm">Volver al histórico</a>
+                @endif
             </div>
         </div>
     @endcan

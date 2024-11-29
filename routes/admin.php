@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::get('facturas.busqueda', [FacturasController::class, 'busqueda'])->name('admin.facturas.busqueda');
     Route::resource('clients', ClientsController::class)->names('admin.clients');  
     Route::resource('bookings', BookingsController::class)->names('admin.bookings');
+    Route::get('bookings.historico', [BookingsController::class, 'historico'])->name('admin.bookings.historico');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 });

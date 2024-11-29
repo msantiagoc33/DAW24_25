@@ -316,6 +316,12 @@ return [
             'can' => 'Consultor',
         ], 
         [
+            'text' => 'Histórico',
+            'route' => 'admin.bookings.historico',
+            'icon' => 'fas fa-fw fa-landmark',
+            'can' => 'Consultor',
+        ], 
+        [
             'text' => 'Usuarios',
             'route' => 'admin.users.index',
             'icon' => 'fas fa-users fa-fw',
@@ -351,6 +357,11 @@ return [
             'text' => 'Gastos',
             'route' => 'admin.facturas.index',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
+        ],  
+        [
+            'text' => 'Resumen anual',
+            'route' => 'admin.facturas.index',
+            'icon' => 'fas fa-fw fa-file',
         ],  
          
     ],

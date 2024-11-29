@@ -44,14 +44,12 @@
             <option value="{{ $apto->id }}">{{ $apto->name }}</option>
         @endforeach
     </select>
-
+<br>
     @if ($apartamento && $apartamento->facturas->isNotEmpty())
 
         <div class="card">
 
             <div class="card-header">
-
-                {{-- <h2 class="float-left">Facturas del Apartamento: {{ $apartamento->name }}</h2> --}}
 
                 @can('Administrador')
                     <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.facturas.create') }}">Nueva

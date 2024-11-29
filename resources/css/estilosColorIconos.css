@@ -10,6 +10,10 @@ td button i {
     background-color: #3f9fef !important;
 }
 
+.bg-verde-claro {
+    background-color: #28a745 !important;
+}
+
 /* le da un color azul claro a los input cuando están en focus */
 .custom-input:focus {
     background-color: #cce5ff;

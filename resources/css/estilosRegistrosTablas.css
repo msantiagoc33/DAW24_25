@@ -8,3 +8,8 @@
     background-color: white;
     /* Blanco */
 }
+
+.table-historico tbody tr:nth-of-type(even) {
+    background-color: #28a745;
+    /* Verde claro */
+}

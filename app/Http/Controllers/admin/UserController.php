@@ -83,10 +83,10 @@ class UserController extends Controller
 
     public function menu(): View
     {
-        if (!auth()->user()->can('admin.user.index')) {
-            return view('admin.users.index');  // Vista para usuarios con el permiso 'admin.user.index'
+        if (!auth()->user()->can('admin.bookings.index')) {
+            return view('admin.bookings.index');  // Vista para usuarios con el permiso 'admin.bookings.index'
         }
     
-        return view('dashboard');  // Vista para usuarios sin ese permiso
+        return view('admin.index');  // Vista para usuarios sin ese permiso
     }
 }

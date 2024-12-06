@@ -441,26 +441,26 @@ return [
                 ],
             ],
         ],
-        'Chartjs' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => true,
-                    'location' => 'vendor/chart.js/Chart.bundle.min.js',
-                ],
-            ],
-        ],
-        'Sweetalert2' => [
-            'active' => true,
-            'files' => [
-                [
-                    'type' => 'js',
-                    'asset' => false,
-                    'location' => 'vendor/sweetalert2/sweetalert2.all.min.js',
-                ],
-            ],
-        ],
+        // 'Chartjs' => [
+        //     'active' => true,
+        //     'files' => [
+        //         [
+        //             'type' => 'js',
+        //             'asset' => true,
+        //             'location' => 'vendor/chart.js/Chart.bundle.min.js',
+        //         ],
+        //     ],
+        // ],
+        // 'Sweetalert2' => [
+        //     'active' => true,
+        //     'files' => [
+        //         [
+        //             'type' => 'js',
+        //             'asset' => false,
+        //             'location' => 'vendor/sweetalert2/sweetalert2.all.min.js',
+        //         ],
+        //     ],
+        // ],
         'Pace' => [
             'active' => false,
             'files' => [

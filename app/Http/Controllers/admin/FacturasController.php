@@ -14,7 +14,7 @@ class FacturasController extends Controller
     /**
      * Lista todas las facturas.
      */
-    public function index(): \Illuminate\View\View
+    public function index(): View
     {
         return view('admin.facturas.index');
     }

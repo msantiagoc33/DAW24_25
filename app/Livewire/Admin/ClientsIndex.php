@@ -13,7 +13,7 @@ class ClientsIndex extends Component
 
     public function render()
     {
-        $clients = Client::orderBy('id', 'desc')->paginate(7);
+        $clients = Client::orderBy('id', 'desc')->paginate(12);
 
         return view('livewire.admin.clients-index', compact('clients'));
     }

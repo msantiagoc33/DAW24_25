@@ -12,11 +12,16 @@
         @if ($apartments->count())
             <div class="card">
                 <div class="card-header">
+                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                        Lista de Apartamentos
+                    </div>  
+                    
+                </div>
+                <div class="card-body">
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.apartments.create') }}">Nuevo</a>
                     @endcan
-                </div>
-                <div class="card-body">
+                    <br>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th class="text-center">Nombre</th>

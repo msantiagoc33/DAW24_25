@@ -17,10 +17,11 @@ class CalendarController extends Controller
         $fechasReservadas = $reservasActivas->map(function ($reservasActivas) {
             return [
                 'start' => $reservasActivas->fechaEntrada->toDateString(),
-                'end' => $reservasActivas->fechaSalida->toDateString(),
+                'end' => $reservasActivas->fechaSalida->addDay()->toDateString(),
                 'title' => $reservasActivas->apartment->name,
             ];
         });
+
         return view('calendar.index', compact('fechasReservadas'));
     }
 }

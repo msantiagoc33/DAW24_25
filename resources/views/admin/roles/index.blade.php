@@ -19,11 +19,15 @@
         @if ($roles->count())
             <div class="card">
                 <div class="card-header">
+                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                        Lista de Roles
+                    </div>                   
+                </div>
+                
+                <div class="card-body">
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('roles.create') }}">Nuevo</a>
                     @endcan
-                </div>
-                <div class="card-body">
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th class="text-center">Nombre</th>

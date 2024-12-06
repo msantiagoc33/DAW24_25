@@ -21,11 +21,6 @@ class BookingsController extends Controller
         return view('admin.bookings.index');
     }
 
-    public function historico(): View
-    {
-        return view('admin.bookings.historico');
-    }
-
     /**
      * Crear una nueva reserva
      */
@@ -128,5 +123,26 @@ class BookingsController extends Controller
     {
         $booking->delete();
         return redirect()->route('admin.bookings.index')->with('success', 'Reserva eliminada con éxito.');
+    }
+
+    public function historico(): View
+    {
+        return view('admin.bookings.historico');
+    }
+
+    public function resumen(): View
+    {
+        $totalPorYears = Booking::selectRaw('YEAR(fechaentrada) as anio, SUM(importe) as total, apartment_id, SUM(DATEDIFF(fechasalida, fechaentrada)) as total_dias')
+        ->where('historico', true)
+        ->groupBy('anio','apartment_id')
+        ->orderBy('apartment_id', 'ASC')
+        ->get();
+
+        return view('admin.bookings.resumen', compact('totalPorYears'));
+    }
+
+    public function fiscalidad(): View
+    {
+        return view('admin.bookings.fiscalidad');
     }
 }

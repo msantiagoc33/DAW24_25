@@ -37,20 +37,24 @@
         </div>
     @endif
 
-    <label for="apartamento">Selecciona un Apartamento:</label>
-    <select wire:model.live="apartamentoSeleccionado" id="apartamento" class="form-control">
-        <option value="">Selecciona un apartamento...</option>
-        @foreach ($apartamentos as $apto)
-            <option value="{{ $apto->id }}">{{ $apto->name }}</option>
-        @endforeach
-    </select>
-<br>
+
     @if ($apartamento && $apartamento->facturas->isNotEmpty())
 
         <div class="card">
 
-            <div class="card-header">
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Facturas del Apartamento: {{ $apartamento->name }}
+            </div>
 
+            <div class="card-body">
+                <label for="apartamento">Selecciona un Apartamento:</label>
+                <select wire:model.live="apartamentoSeleccionado" id="apartamento" class="form-control">
+                    <option value="">Selecciona un apartamento...</option>
+                    @foreach ($apartamentos as $apto)
+                        <option value="{{ $apto->id }}">{{ $apto->name }}</option>
+                    @endforeach
+                </select>
+                <br>
                 @can('Administrador')
                     <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.facturas.create') }}">Nueva
                         factura</a>
@@ -58,6 +62,7 @@
                 <button id="toggleForm" class="btn btn-primary btn-sm float-right mr-3">Consultas</button>
                 <button wire:click='resetFilters' class="btn btn-secondary btn-sm float-right mr-3">Recargar
                     listado</button>
+                <br>
                 {{-- Formulario de búsqueda --}}
                 <div id="hiddenForm" class="hidden w-50 bg-light ">
                     <form wire:submit.prevent="buscarFacturas">
@@ -115,11 +120,8 @@
                         <button type="submit" class="btn btn-success">Enviar</button>
                     </form>
                 </div>
-                <h2 class="float-left">Facturas del Apartamento: {{ $apartamento->name }}</h2>
-            </div>
-
-            <div class="card-body">
-                <table class="table table-striped table-bordered">
+                <br>
+                <table class="table table-striped table-bordered" id="facturas">
                     <thead>
                         <tr>
                             <th class="text-center">ID</th>
@@ -136,7 +138,8 @@
                     @foreach ($facturas as $factura)
                         <tr>
                             <td class="text-center align-middle" style="width: 5%">{{ $factura->id }}</td>
-                            <td class="text-nowrap text-center align-middle" style="width: 10%">{{ $factura->fecha }}</td>
+                            <td class="text-nowrap text-center align-middle" style="width: 10%">{{ $factura->fecha }}
+                            </td>
                             <td class="text-right mr-3 align-middle" style="width: 10%">{{ $factura->importe }}</td>
                             <td style="width: 30%" class="align-middle">
                                 @foreach ($factura->concepts as $concept)
@@ -190,30 +193,4 @@
             <td>Suma el total de esta consulta: <strong>{{ number_format($totalImporte, 2) }} €</strong></td>
         @endif
     </div>
-    
-    <!-- SweetAlert2 JS para la confirmación de eliminación -->
-    <script>
-        function confirmDelete(facturaId) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, enviar el formulario
-                    document.getElementById('delete-form-' + facturaId).submit();
-                }
-            });
-        }
-        // Oculta/Muestra el formulario de búsqueda
-        document.getElementById('toggleForm').addEventListener('click', function() {
-            const form = document.getElementById('hiddenForm');
-            form.classList.toggle('visible'); // Alterna entre las clases "hidden" y "visible"
-        });
-    </script>
 </div>

@@ -1,7 +1,6 @@
 <div>
-
     @can('Administrador')
-        <h1>Lista de usuarios</h1>
+
         @if ($users->count())
             @if (session('success'))
                 <div class="alert alert-success">
@@ -9,12 +8,14 @@
                 </div>
             @endif
             <div class="card">
+                <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    Lista de usuarios
+                </div>
 
-                <div class="card-header">
+                <div class="card-body">
                     <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.users.create') }}">Nuevo</a>
                     <input wire:model.live='search' class="form-control" placeholder="Buscar por nombre o correo">
-                </div>
-                <div class="card-body">
+                    <br>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th>Nombre</th>

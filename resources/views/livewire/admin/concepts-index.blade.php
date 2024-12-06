@@ -7,14 +7,17 @@
                 </div>
             @endif
             <div class="card">
-                <div class="card-header">
+                <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    Lista de Conceptos
+                </div>
+
+                <div class="card-body">
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.concepts.create') }}">Nuevo</a>
                     @endcan
-                    <h1>Lista de conceptos</h1>
+                    <br>
                     <input wire:model="search" class="form-control" placeholder="Buscar">
-                </div>
-                <div class="card-body">
+                    <br>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th>Nombre</th>

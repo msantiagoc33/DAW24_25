@@ -24,7 +24,7 @@ class BookingsIndex extends Component
         $this->apartamentos = Apartment::all();
         $this->selectedApartment = $this->apartamentos->first()->id;
         $this->nombreApartamento = $this->apartamentos->first()->name;
-       
+
         $this->hoy = now();
 
         // Marcar como históricas las reservas que ya han pasado
@@ -46,8 +46,13 @@ class BookingsIndex extends Component
         $reservas = Booking::where('historico', false)
             ->where('apartment_id',  $this->selectedApartment)
             ->orderBy('fechaEntrada', 'asc')
-            ->paginate(5);
+            ->paginate(12);
 
-        return view('livewire.admin.bookings-index', compact('reservas'));
+        $totalImporte = Booking::where('historico', false)
+            ->where('apartment_id', $this->selectedApartment)
+            ->sum('importe');
+
+
+        return view('livewire.admin.bookings-index', compact('reservas', 'totalImporte'));
     }
 }

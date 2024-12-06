@@ -13,24 +13,25 @@
     </div>
 
     <div class="card">
-        <div class="card-header">
-            @can('Consultor')
-                <h1>Listado <strong>histórico</strong> del apartamento: <strong>{{ $nombreApartamento }}</strong></h1>
-                <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                <select wire:model.live='selectedApartment' id="selectedApartment"
-                    class="form-control form-select bg-azul-claro text-white">
-                    <option value="">Selecciona un apartamento ...</option>
-                    @foreach ($apartamentos as $apartamento)
-                        <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                    @endforeach
-                </select>
-                </h1>
-            @endcan
+        <div class="card-header bg-verde-claro text-center fs-1">
+            Listado <strong>histórico</strong> del apartamento: <strong>{{ $nombreApartamento }}</strong>
         </div>
 
         @if ($reservas->isNotEmpty())
             @can('Consultor')
                 <div class="card-body">
+                    @can('Consultor')
+
+                        <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
+                        <select wire:model.live='selectedApartment' id="selectedApartment"
+                            class="form-control form-select bg-azul-claro text-white">
+                            <option value="">Selecciona un apartamento ...</option>
+                            @foreach ($apartamentos as $apartamento)
+                                <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                            @endforeach
+                        </select>
+                    @endcan
+                    <br>
                     <table class="table table-striped table-bordered table-sm table-historico">
                         <thead>
                             <tr>
@@ -49,6 +50,10 @@
                         </thead>
 
                         <tbody>
+                            @php
+                                $indiceReservas = $reservas->firstItem() - 1; // Calcula el índice inicial
+                            @endphp
+
                             @foreach ($reservas as $reserva)
                                 @php
                                     $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false);
@@ -77,6 +82,9 @@
                 </div>
 
                 <div class="card-footer">
+                    <div class="float-left">
+                        Total importe: <strong>{{ number_format($totalImporte, 2, ',', '.') }} €</strong>
+                    </div>
                     <div class="mt-3">{{ $reservas->links() }}</div>
                 </div>
             @else
@@ -93,4 +101,3 @@
         @endcan
 
 </div>
-

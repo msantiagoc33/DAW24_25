@@ -23,13 +23,13 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h5>Dar de alta una nueva reserva</h5>
+            <div class="card-header bg-azul-claro">
+                <h1><strong class="text-white">Dar de alta una nueva reserva</strong></h1>
             </div>
 
             <form method="POST" action="{{ route('admin.bookings.store') }}" id="formularioReserva">
                 @csrf
-                
+
                 <div class="card-body">
                     {{-- Nombre del cliente, plataforma y apartamento --}}
                     <div class="form-group">
@@ -44,8 +44,7 @@
                                 </select>
                             </div>
                             <div class="col-md-1 d-flex justify-content-left align-items-left">
-                                <a class="btn btn-info btn-md"
-                                    href="{{ route('admin.clients.create') }}">Nuevo</a>
+                                <a class="btn btn-info btn-md" href="{{ route('admin.clients.create') }}">Nuevo</a>
                             </div>
 
                             <div class="col-md-4">
@@ -154,7 +153,6 @@
 
 @section('js')
     <script>
-        // Calculo del número de días alquilado
         document.addEventListener('DOMContentLoaded', function() {
             const clientSelect = document.getElementById('client-select');
             const fechaEntrada = document.getElementById('fechaEntrada');
@@ -162,65 +160,73 @@
             const diasAlquilado = document.getElementById('diasAlquilado');
             const errorFechaEntrada = document.getElementById('errorFechaEntrada');
             const errorFechaSalida = document.getElementById('errorFechaSalida');
-            const formularioReserva = document.getElementById('formularioReserva');
-            document.getElementById('diasAlquilado').disabled = true;
 
-            clientSelect.focus();
-
-            // Desactiva el campo fechaSalida al cargar la página hasta comprobar que la fecha de entrada es correcta
+            // Desactivar diasAlquilado y fechaSalida al principio
+            diasAlquilado.disabled = true;
             fechaSalida.disabled = true;
 
-            // Esta función calcula el número de días entre la fecha de entrada y la fecha de salida
-            function calcularDias() {
+            // Enfocar al primer campo (cliente) al cargar la página
+            if (clientSelect) clientSelect.focus();
+
+            // Cuando haya un cambio en la fecha de entrada
+            fechaEntrada.addEventListener('change', function() {
+                // asignamos a la variable entrada la fecha de entrada
                 const entrada = new Date(fechaEntrada.value);
-                const salida = new Date(fechaSalida.value);
+                // asignamos a la variable hoy la fecha de hoy
+                const hoy = new Date();
 
-                if (salida > entrada) {
-                    const diffTime = Math.abs(salida - entrada); // Diferencia en milisegundos
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Diferencia en días
-                    diasAlquilado.value = diffDays + 1;
-                } else {
-                    diasAlquilado.value =
-                        'El día de salida tiene que ser mayor que el de entrada';
-                }
-            }
+                // Restablecer valores iniciales
+                errorFechaEntrada.innerText = '';
+                // habilitar el campo de fecha de salida una vez que hemos relleando la fecha de entrada
+                fechaSalida.disabled = true;
 
-            // Esta función comprueba que la fecha de entrada no sea menor que la fecha de hoy
-            function compruebaFecha() {
-                const fechaHoy = new Date();
-                const entrada = new Date(fechaEntrada.value);
-                const salida = new Date(fechaSalida.value);
-
-                // Establecer las horas de ambas fechas a las 00:00:00 para comparar solo las fechas sin la hora
-                fechaHoy.setHours(0, 0, 0, 0);
+                // Ajustar las horas de las fechas para que no haya diferencias al comparar las fechas
+                hoy.setHours(0, 0, 0, 0);
                 entrada.setHours(0, 0, 0, 0);
 
-                if (entrada < fechaHoy) {
+                // La fecha de entrada no puede ser menor que la fecha de hoy
+                if (entrada < hoy) {
                     errorFechaEntrada.innerText =
-                        'El fecha de entrada no puede ser menor que la fecha de hoy';
-                    fechaSalida.disabled = true;
+                        'La fecha de entrada no puede ser menor que la fecha de hoy.';
                     fechaEntrada.focus();
-                } else {
-                    errorFechaEntrada.innerText = '';
-                    fechaSalida.disabled = false;
-                    fechaSalida.focus();
+                    return;
                 }
-            }
 
-            // Evento para comprobar la fecha de salida
-            fechaSalida.addEventListener('blur', function() {
-                // Verificar si el campo está vacío
-                if (!fechaSalida.value) {
-                    errorFechaSalida.innerText = "Debe introducir una fecha de salida válida.";
-                    fechaSalida.focus();
-                } else {
-                    errorFechaSalida.innerText = ""; // Limpia el mensaje de error si la fecha es válida
-                }
+                // Habilitar fecha de salida una vez comprobado que la fecha de entrada es correcta
+                fechaSalida.disabled = false;
+
+                // No se podrá seleccionar una fecha en el campo fechaSalida que sea anterior a la fecha seleccionada en el campo fechaEntrada.
+                fechaSalida.min = fechaEntrada.value;
+
+                // Sugerir un valor por defecto para la fecha de salida (2 día después)
+                const salidaDefault = new Date(entrada);
+                salidaDefault.setDate(salidaDefault.getDate() + 2);
+                fechaSalida.value = salidaDefault.toISOString().split('T')[0];
             });
 
-            // Evento para recalcular cuando cambien las fechas
-            fechaEntrada.addEventListener('change', compruebaFecha);
-            fechaSalida.addEventListener('change', calcularDias);
+            // Calcular los días alquilados
+            fechaSalida.addEventListener('change', function() {
+                const entrada = new Date(fechaEntrada.value);
+                const salida = new Date(fechaSalida.value);
+
+                // Limpiar errores previos
+                errorFechaSalida.innerText = '';
+
+                // Verificar si la fecha de salida es válida
+                if (salida <= entrada) {
+                    errorFechaSalida.innerText =
+                        'La fecha de salida debe ser mayor que la de entrada.';
+                    fechaSalida.focus();
+                    diasAlquilado.value = '';
+                    return;
+                }
+
+                // Calcular la diferencia en días
+                const diffTime = Math.abs(salida - entrada); // Diferencia en milisegundos
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Diferencia en días
+                diasAlquilado.value = diffDays+1;
+            });
         });
     </script>
+
 @stop

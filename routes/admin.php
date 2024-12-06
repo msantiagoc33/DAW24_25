@@ -26,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('clients', ClientsController::class)->names('admin.clients');  
     Route::resource('bookings', BookingsController::class)->names('admin.bookings');
     Route::get('bookings.historico', [BookingsController::class, 'historico'])->name('admin.bookings.historico');
+    Route::get('bookings.resumen', [BookingsController::class, 'resumen'])->name('admin.bookings.resumen');
+    Route::get('bookings.fiscalidad', [BookingsController::class, 'fiscalidad'])->name('admin.bookings.fiscalidad');
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 
 });

@@ -1,5 +1,5 @@
 <div>
-   
+
 
     {{-- Errores --}}
     <div class="erroresMensajes">
@@ -28,29 +28,29 @@
 
 
     <div class="card">
-        <div class="card-header">
-            @can('Administrador')
-                <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
-                    reserva</a>
-            @endcan
-
-            @can('Consultor')
-                <h1>Listado de reservas del apartamento: <strong>{{ $nombreApartamento }}</strong></h1>
-                <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                <select wire:model.live='selectedApartment' id="selectedApartment"
-                    class="form-control form-select bg-azul-claro text-white">
-                    <option value="">Selecciona un apartamento ...</option>
-                    @foreach ($apartamentos as $apartamento)
-                        <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                    @endforeach
-                </select>
-                </h1>
-            @endcan
+        <div class="card-header bg-azul-claro text-center text-white fs-1">
+            Listado de reservas del apartamento: <strong>{{ $nombreApartamento }}</strong>
         </div>
 
         @if ($reservas->isNotEmpty())
             @can('Consultor')
                 <div class="card-body">
+                    @can('Administrador')
+                        <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
+                            reserva</a>
+                    @endcan
+
+                    @can('Consultor')
+                        <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
+                        <select wire:model.live='selectedApartment' id="selectedApartment"
+                            class="form-control form-select bg-azul-claro text-white">
+                            <option value="">Selecciona un apartamento ...</option>
+                            @foreach ($apartamentos as $apartamento)
+                                <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                            @endforeach
+                        </select>
+                        <br>
+                    @endcan
                     <table class="table table-striped table-bordered table-sm">
                         <thead>
                             <tr>
@@ -77,9 +77,16 @@
                         <tbody>
                             @foreach ($reservas as $reserva)
                                 @php
-                                    $diasParaEntrar = (int) abs($reserva->fechaEntrada->diffInDays($hoy, false))+1;
-                                    $diasParaSalir = (int) abs($reserva->fechaSalida->diffInDays($hoy, false))+1;
-                                    $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false)+1;
+                                    if ($reserva->fechaEntrada <= $hoy) {
+                                        $diasParaEntrar = 0;
+                                    } else {
+                                        $diasParaEntrar =
+                                            (int) abs($reserva->fechaEntrada->diffInDays($hoy, false)) + 1;
+                                    }
+                                    //     $diasParaEntrar = (int) abs($reserva->fechaEntrada->diffInDays($hoy, false)) + 1;
+                                    // $diasParaEntrar = (int) abs($reserva->fechaEntrada->diffInDays($hoy, false))+1;
+                                    $diasParaSalir = (int) abs($reserva->fechaSalida->diffInDays($hoy, false)) + 1;
+                                    $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false) + 1;
                                 @endphp
 
                                 <tr class="{{ $reserva->fechaEntrada <= $hoy ? 'bg-verde-claro' : '' }}">
@@ -107,7 +114,7 @@
                                                     class="fas fa-fw fa-regular fa-pen"></i></a>
                                         </td>
 
-                                        <td class="text-center" width='auto'>
+                                        <td class="text-center" style=" width: 4%; ">
                                             <form action="{{ route('admin.bookings.destroy', $reserva) }}" method="POST"
                                                 style="display:inline;" id="delete-form-{{ $reserva->id }}">
                                                 @csrf
@@ -127,6 +134,10 @@
                 </div>
 
                 <div class="card-footer">
+                    <div class="float-left">
+                        Total importe: <strong>{{ number_format($totalImporte, 2, ',', '.') }} €</strong>
+
+                    </div>
                     <div class="mt-3">{{ $reservas->links() }}</div>
                 </div>
             @else
@@ -162,7 +173,6 @@
             }
         });
     }
-    
 </script>
 
 </script>

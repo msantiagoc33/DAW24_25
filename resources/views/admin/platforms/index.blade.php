@@ -12,12 +12,16 @@
         @if ($platforms->count())
             <div class="card">
                 <div class="card-header">
-                    <h2>Listado de plataformas.</h2>
-                    @can('Administrador')
-                        <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.platforms.create') }}">Nuevo</a>
-                    @endcan
+                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                        Lista de Plataforms
+                    </div>
+                    
                 </div>
                 <div class="card-body">
+                    @can('Administrador')
+                        <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.platforms.create') }}">Nuevo</a>
+                    @endcan
+                    <br>
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th class="text-center">Nombre</th>

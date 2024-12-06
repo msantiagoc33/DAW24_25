@@ -7,11 +7,16 @@ td button i {
 }
 
 .bg-azul-claro {
-    background-color: #3f9fef !important;
+    background-color: #2845a7 !important;
 }
 
 .bg-verde-claro {
     background-color: #28a745 !important;
+}
+
+.bg-rojo-claro {
+    background-color: #a74545 !important;
+    color: white; 
 }
 
 /* le da un color azul claro a los input cuando están en focus */

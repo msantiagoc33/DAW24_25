@@ -360,8 +360,13 @@ return [
         ],  
         [
             'text' => 'Resumen anual',
-            'route' => 'admin.facturas.index',
+            'route' => 'admin.bookings.resumen',
             'icon' => 'fas fa-fw fa-file',
+        ],  
+        [
+            'text' => 'IRPF',
+            'route' => 'admin.bookings.fiscalidad',
+            'icon' => 'fas fa-fw fa-comment-dollar',
         ],  
          
     ],

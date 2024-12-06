@@ -13,7 +13,7 @@ class HistoricoIndex extends Component
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
 
-    public $indiceReservas = 0;
+    // public $indiceReservas = 0;
     public $hoy;
     public $apartamentos;
     public $selectedApartment;
@@ -24,7 +24,7 @@ class HistoricoIndex extends Component
         $this->apartamentos = Apartment::all();
         $this->selectedApartment = $this->apartamentos->first()->id;
         $this->nombreApartamento = $this->apartamentos->first()->name;
-       
+
         $this->hoy = now();
 
         // Marcar como históricas las reservas que ya han pasado
@@ -46,10 +46,13 @@ class HistoricoIndex extends Component
         $reservas = Booking::where('historico', true)
             ->where('apartment_id',  $this->selectedApartment)
             ->orderBy('fechaEntrada', 'asc')
-            ->paginate(8);
+            ->paginate(12);
 
-        return view('livewire.admin.historico-index', compact('reservas'));
+        $totalImporte = Booking::where('historico', true)
+            ->where('apartment_id', $this->selectedApartment)
+            ->sum('importe');
+
+
+        return view('livewire.admin.historico-index', compact('reservas', 'totalImporte'));
     }
 }
-
-

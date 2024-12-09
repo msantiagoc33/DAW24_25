@@ -25,7 +25,7 @@ class ConceptsController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|min:3'
+            'name' => 'required|string|max:255|min:3|unique:concepts,name',
         ]);
 
         Concept::create($request->all());
@@ -47,7 +47,7 @@ class ConceptsController extends Controller
     public function update(Request $request, Concept $concept)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:concepts,name',
         ]);
 
         $concepto = Concept::findOrFail($concept->id);

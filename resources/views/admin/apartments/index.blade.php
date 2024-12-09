@@ -3,25 +3,56 @@
 @section('title', 'Apartments-index')
 
 @section('content_header')
-
+    {{-- Cabecera de la página (opcional, vacía en este caso). --}}
 @stop
 
 @section('content')
+    {{-- Sección para mostrar errores y mensajes de éxito --}}
+    <div class="erroresMensajes">
+        @if ($errors->any())
+            {{-- Lista de errores de validación --}}
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if (session('info'))
+            {{-- Mensaje de información --}}
+            <div class="alert alert-success">
+                <strong>{{ session('info') }}</strong>
+            </div>
+        @endif
+
+        @if (session('success'))
+            {{-- Mensaje de éxito --}}
+            <div class="alert alert-success">
+                <strong>{{ session('success') }}</strong>
+            </div>
+        @endif
+    </div>
     <br>
+    {{-- Verificación de permisos del usuario --}}
     @can('Consultor')
         @if ($apartments->count())
+            {{-- Tabla que muestra la lista de apartamentos si existen registros --}}
             <div class="card">
                 <div class="card-header">
                     <div class="card-header bg-azul-claro text-center text-white fs-1">
                         Lista de Apartamentos
-                    </div>  
-                    
+                    </div>
+
                 </div>
                 <div class="card-body">
+                    {{-- Botón para crear un nuevo apartamento (solo visible para administradores) --}}
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.apartments.create') }}">Nuevo</a>
                     @endcan
                     <br>
+                    {{-- Tabla que muestra la lista de apartamentos --}}
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th class="text-center">Nombre</th>
@@ -52,7 +83,8 @@
 
                                     <td class="text-center" width='10px'>
                                         <form action="{{ route('admin.apartments.destroy', $apartment) }}" method="POST"
-                                            style="display:inline;">
+                                            style="display:inline;" id="delete-form-{{ $apartment->id }}">
+
                                             @csrf
                                             @method('DELETE')
 
@@ -79,28 +111,27 @@
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+
 @stop
 
 @section('js')
-<script>
-    function confirmDelete(apartamentoId) {
-        Swal.fire({
-            title: '¿Estás seguro?',
-            text: "Esta acción no se puede deshacer.",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Sí, eliminar',
-            cancelButtonText: 'Cancelar'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Si el usuario confirma, enviar el formulario
-                document.getElementById('delete-form-' + apartamentoId).submit();
-            }
-        });
-    }
-</script>
+    <script>
+        function confirmDelete(apartamentoId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario
+                    document.getElementById('delete-form-' + apartamentoId).submit();
+                }
+            });
+        }
+    </script>
 @stop

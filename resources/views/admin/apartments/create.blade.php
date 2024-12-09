@@ -10,6 +10,7 @@
 @section('content')
     @can('Administrador')
         <br>
+        
         <div class="erroresMensajes">
             @if (session('info'))
                 <div class="alert alert-success">

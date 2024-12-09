@@ -16,7 +16,7 @@
                         <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.concepts.create') }}">Nuevo</a>
                     @endcan
                     <br>
-                    <input wire:model="search" class="form-control" placeholder="Buscar">
+                    <input wire:model.live="search" class="form-control" placeholder="Buscar">
                     <br>
                     <table class="table table-striped table-bordered">
                         <tr>

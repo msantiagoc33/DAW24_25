@@ -121,7 +121,7 @@
                     </form>
                 </div>
                 <br>
-                <table class="table table-striped table-bordered" id="facturas">
+                <table class="table table-striped" id="facturas">
                     <thead>
                         <tr>
                             <th class="text-center">ID</th>
@@ -131,22 +131,30 @@
                             <th class="text-center">Notas</th>
                             <th class="text-center">Archivo</th>
                             @can('Administrador')
-                                <th class="text-center" colspan="2">Acciones</th>
+                                <th class="text-center" >Acciones</th>
+                                <th></th>
+                            @else
+                                <th></th>
+                                <th></th>
                             @endcan
                         </tr>
                     </thead>
                     @foreach ($facturas as $factura)
                         <tr>
                             <td class="text-center align-middle" style="width: 5%">{{ $factura->id }}</td>
-                            <td class="text-nowrap text-center align-middle" style="width: 10%">{{ $factura->fecha }}
-                            </td>
+
+                            <td class="text-nowrap text-center align-middle" style="width: 10%">{{ $factura->fecha }}</td>
+
                             <td class="text-right mr-3 align-middle" style="width: 10%">{{ $factura->importe }}</td>
+
                             <td style="width: 30%" class="align-middle">
                                 @foreach ($factura->concepts as $concept)
                                     {{ $concept->name }}{{ !$loop->last ? ', ' : '' }}
                                 @endforeach
                             </td>
+
                             <td class="align-middle">{{ $factura->notas }}</td>
+
                             <td class="text-center align-middle"style="width: 15%">
                                 @if ($factura->file_uri)
                                     <a href="{{ Storage::url($factura->file_uri) }}" target="_blank"
@@ -157,6 +165,7 @@
                                     No disponible
                                 @endif
                             </td>
+
                             @can('Administrador')
                                 <td class="text-center align-middle" width='10px'>
                                     <a href="{{ route('admin.facturas.edit', $factura->id) }}"><i
@@ -175,6 +184,9 @@
                                         </button>
                                     </form>
                                 </td>
+                            @else
+                                <td></td>
+                                <td></td>
                             @endcan
                         </tr>
                     @endforeach

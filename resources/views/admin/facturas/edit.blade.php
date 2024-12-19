@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-
+{{-- Vista de la edición de una factura --}}
 @section('title', 'Admin-edit-Factura')
 
 @section('content_header')
@@ -7,8 +7,9 @@
 @stop
 
 @section('content')
-
+    {{-- Sólo tendrán acceso a la edición de facturas los usuarios con el rol de Administrador --}}
     @can('Administrador')
+        {{-- Vista de posibles mensajes --}}
         <div class="errores">
             @if ($errors->any())
                 <div class="alert alert-danger">
@@ -31,17 +32,24 @@
                     <strong>{{ session('success') }}</strong>
                 </div>
             @endif
+
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
 
         <div class="card">
-            <div class="card-header bg-gray-400">
-                <h5>Modificar factura.</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Modificar factura
             </div>
 
             <form action="{{ route('admin.facturas.update', $factura->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
-
+                {{-- Fecha de la factura --}}
                 <div class="card-body">
                     <div class="form-group">
                         <label for="fecha">Fecha de la factura</label>
@@ -52,6 +60,7 @@
                         @enderror
                     </div>
 
+                    {{-- Importe de la factura --}}
                     <div class="form-group">
                         <label for="importe">Importe</label>
                         <input type="number" name="importe" id="importe" step="any" placeholder="Ejemplo: 125.36"
@@ -61,6 +70,7 @@
                         @enderror
                     </div>
 
+                    {{-- Nombre de la factura actual y selección para subir factura --}}
                     <div class="form-group">
                         <label for="">Factura actual</label>
                         @if ($factura->file_uri)
@@ -77,6 +87,7 @@
                         @enderror
                     </div>
 
+                    {{-- Seleccionar el apartamento al que se le asigna la factura --}}
                     <div class="form-group">
                         <label for="apartment_id">Apartamento</label>
                         <select name="apartment_id" id="apartment_id" class="form-control">
@@ -89,9 +100,10 @@
                         </select>
                     </div>
 
+                    {{-- Seleccionar el/los conceptos de la factura --}}
                     <div class="form-group">
                         <label for="conceptos">Conceptos</label>
-                        <select name="conceptos[]" id="conceptos" class="form-control" multiple>
+                        <select name="conceptos[]" id="conceptos" class="form-control" multiple size="10">
                             @foreach ($conceptos as $concepto)
                                 <option value="{{ $concepto->id }}"
                                     {{ in_array($concepto->id, $factura->concepts->pluck('id')->toArray()) ? 'selected' : '' }}>
@@ -101,6 +113,7 @@
                         </select>
                     </div>
 
+                    {{-- Nota adicional a la factura --}}
                     <div class="form-group">
                         <label for="notas">Nota adicional</label>
                         <input type="text" name="notas" id="notas" step="any" placeholder="Notas adicionales"
@@ -110,6 +123,7 @@
                         @enderror
                     </div>
 
+                    {{-- Botones de acción --}}
                     <div class="card-footer float-right">
                         <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
                         <a href="{{ route('admin.facturas.index') }}" class="btn btn-secondary btn-sm">Volver</a>
@@ -117,6 +131,9 @@
                 </div>
             </form>
         </div>
+    @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
@@ -125,5 +142,5 @@
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

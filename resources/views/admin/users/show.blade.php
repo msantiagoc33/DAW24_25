@@ -1,15 +1,17 @@
 @extends('adminlte::page')
 
-@section('title', 'Admin-index')
+{{-- Vista para mostrar la ficha de un usuario --}}
+@section('title', 'Users-show')
 
 @section('content_header')
 
 @stop
 
 @section('content')
+    {{-- Esta vista sólo la puede ver el Administrador --}}
     @can('Administrador')
         <div class="card">
-            <div class="card-header bg-slate-600">
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
                 <h1>Ficha del usuario</h1>
             </div>
 
@@ -38,11 +40,8 @@
             </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para ver ficha de usuarios.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index');
     @endcan
 @stop
 
@@ -51,5 +50,5 @@
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

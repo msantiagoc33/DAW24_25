@@ -1,15 +1,26 @@
 @extends('adminlte::page')
+{{-- Vista para la edición de una reserva --}}
 
 @section('title', 'Reserva-Editar')
 
 @section('content_header')
-
 @stop
 
 @section('content')
+    {{-- La edición de la reserva sólo estará accesible a los usuarios con rol Administrador --}}
     @can('Administrador')
         <br>
+        {{-- Muestra los posibles mensajes --}}
         <div class="erroresMensajes">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('info'))
                 <div class="alert alert-success">
                     <strong>{{ session('info') }}</strong>
@@ -21,7 +32,9 @@
                 </div>
             @endif
         </div>
-
+        <div class="card-header bg-azul-claro text-center text-white fs-1">
+            Modificar reserva
+        </div>
         <div class="card">
             <form method="POST" action="{{ route('admin.bookings.update', $booking->id) }}">
                 @csrf
@@ -124,7 +137,7 @@
                             <div class="col-md-6">
                                 <label for="comentario">Comentarios</label>
                                 <input type="text" name="comentario" id="comentario" class="form-control custom-input"
-                                    value="{{ old('comentario', $booking->comentario ?? '') }}" required>
+                                    value="{{ old('comentario', $booking->comentario ?? '') }}">
                                 @error('comentario')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -134,6 +147,7 @@
 
                 </div>
 
+                {{-- Botones de actualización de la reserva y listado de reservas --}}
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Actualizar</button>
                     <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">Volver</a>
@@ -142,19 +156,23 @@
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <p>Bienvenido {{ $corto }}</p> <!-- Imprimir el valor de $corto correctamente -->
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
 @section('css')
-
+    {{-- El campo  que tiene el foco se le cambio el color de fondo --}}
+    <style>
+        .custom-input:focus {
+            background-color: #cce5ff;
+            outline: none;
+        }
+    </style>
 @stop
 
 @section('js')
+    {{-- Comprueba la coherencia entre la fecha introducidas y calcula el número de días alquilado --}}
     <script>
         // Calculo del número de días alquilado
         document.addEventListener('DOMContentLoaded', function() {
@@ -175,7 +193,7 @@
                     diasAlquilado.value =
                         'El día de salida tiene que ser mayor que el de entrada'; // Limpiar si no es válido
                 }
-               
+
             }
 
             // Ejecuta al cargar la página

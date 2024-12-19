@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BookingRequest;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use App\Models\Client;
@@ -10,11 +11,28 @@ use App\Models\Platform;
 use App\Models\Apartment;
 use Illuminate\Contracts\View\View;
 
-
+/**
+ * Controlador para gestionar las reservas.
+ * 
+ * @package App\Http\Controllers\Admin
+ * @version 1.0
+ * @since 1.0
+ * @see \App\Models\Booking Modelo de reserva
+ * @see \App\Models\Client Modelo de cliente
+ * @see \App\Models\Platform Modelo de plataforma
+ * @see \App\Models\Apartment Modelo de apartamento
+ * @see \App\Http\Requests\BookingRequest Clase para validar los datos de las reservas
+ * @see \Illuminate\Http\Request Clase para manejar las peticiones HTTP
+ * @see \Illuminate\Contracts\View\View Clase para devolver vistas
+ * @see \App\Http\Controllers\Controller Clase base de controladores de Laravel
+ * @author Manuel Santiago Cabeza
+ */
 class BookingsController extends Controller
 {
     /**
      * Listado de reservas
+     * 
+     * @return View Vista con el listado de reservas
      */
     public function index(): View
     {
@@ -23,6 +41,8 @@ class BookingsController extends Controller
 
     /**
      * Crear una nueva reserva
+     * 
+     * @return View Vista con el formulario para crear una nueva reserva
      */
     public function create(): View
     {
@@ -35,21 +55,12 @@ class BookingsController extends Controller
 
     /**
      * Almacenar una nueva reserva
+     * 
+     * @param Request $request Datos de la petición
+     * @return RedirectResponse Redirección a la lista de reservas
      */
-    public function store(Request $request)
+    public function store(BookingRequest $request)
     {
-
-        $request->validate([
-            'fechaEntrada' => 'required',
-            'fechaSalida' => 'required',
-            'huespedes' => 'required',
-            'importe' => 'required',
-            'comentario' => 'nullable',
-            'platform_id' => 'required',
-            'client_id' => 'required',
-            'apartment_id' => 'required',
-        ]);
-
         // Crear la reserva
         $reserva = new Booking();
         $reserva->fechaEntrada = $request->fechaEntrada;
@@ -67,7 +78,10 @@ class BookingsController extends Controller
     }
 
     /**
-     * Mostar una reserva
+     * Mostar una reserva en detalle
+     * 
+     * @param Booking $booking Reserva a mostrar
+     * @return View Vista con los detalles de la reserva
      */
     public function show(Booking $booking)
     {
@@ -76,6 +90,9 @@ class BookingsController extends Controller
 
     /**
      * Mostar el formulario para editar una reserva
+     * 
+     * @param Booking $booking Reserva a editar
+     * @return View Vista con el formulario para editar la reserva
      */
     public function edit(Booking $booking): View
     {
@@ -87,21 +104,14 @@ class BookingsController extends Controller
     }
 
     /**
-     * Actualizar una reserva
+     * Actualizar una reserva 
+     * 
+     * @param Request $request Datos de la petición
+     * @param Booking $booking Reserva a actualizar
+     * @return RedirectResponse Redirección a la lista de reservas
      */
-    public function update(Request $request, Booking $booking)
+    public function update(BookingRequest $request, Booking $booking)
     {
-        $request->validate([
-            'fechaEntrada' => 'required',
-            'fechaSalida' => 'required',
-            'huespedes' => 'required',
-            'importe' => 'required',
-            'comentario' => 'nullable',
-            'platform_id' => 'required',
-            'client_id' => 'required',
-            'apartment_id' => 'required',
-        ]);
-
         $booking->fechaEntrada = $request->fechaEntrada;
         $booking->fechaSalida = $request->fechaSalida;
         $booking->huespedes = $request->huespedes;
@@ -118,6 +128,9 @@ class BookingsController extends Controller
 
     /**
      * Eliminar una reserva
+     * 
+     * @param Booking $booking Reserva a eliminar
+     * @return RedirectResponse Redirección a la lista de reservas
      */
     public function destroy(Booking $booking)
     {
@@ -125,11 +138,22 @@ class BookingsController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'Reserva eliminada con éxito.');
     }
 
+    /**
+     * Listado de reservas históricas
+     * 
+     * @return View Vista con el listado de reservas históricas
+     */
     public function historico(): View
     {
         return view('admin.bookings.historico');
     }
 
+    /**
+     * Resumen de reservas
+     * 
+     * @return View Vista con el resumen de reservas
+     * Devuelve un listado con el total de ingresos por año y apartamento y el total de días de estancia
+     */
     public function resumen(): View
     {
         $totalPorYears = Booking::selectRaw('YEAR(fechaentrada) as anio, SUM(importe) as total, apartment_id, SUM(DATEDIFF(fechasalida, fechaentrada)) as total_dias')
@@ -141,6 +165,13 @@ class BookingsController extends Controller
         return view('admin.bookings.resumen', compact('totalPorYears'));
     }
 
+    /**
+     * Informe de fiscalidad
+     * 
+     * @return View Vista con el informe de fiscalidad
+     * Utiliza un componente de Livewire para mostrar un formulario con los filtros para generar el informe
+     * Después de seleccionar el apartamento y el año, muestra un listado con el total de ingresos, el total de días de estancia 
+     * y los gastos imputables por el número de días alquilado.*/
     public function fiscalidad(): View
     {
         return view('admin.bookings.fiscalidad');

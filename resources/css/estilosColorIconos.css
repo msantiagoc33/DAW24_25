@@ -6,8 +6,32 @@ td button i {
     color: #0a0a0a !important;
 }
 
+.text-gris-claro{
+    color: #666c6f !important;
+}
+
+.text-verde-claro{
+    color: #28a745 !important;
+}
+
+.text-azul-claro{
+    color: #64c1fa !important;
+}
+
+.text-rojo-claro{
+    color: #a74545 !important;
+}
+
+.text-amarillo-claro{
+    color: #e3ce40 !important;
+}
+
+.text-magenta-claro{
+    color: #e340c5 !important;
+}
+
 .bg-azul-claro {
-    background-color: #2845a7 !important;
+    background-color: #33aefa !important;
 }
 
 .bg-verde-claro {
@@ -21,6 +45,6 @@ td button i {
 
 /* le da un color azul claro a los input cuando están en focus */
 .custom-input:focus {
-    background-color: #cce5ff;
-    outline: none;
+    background-color: #cce5ff !important;
+    outline: none !important;
 }

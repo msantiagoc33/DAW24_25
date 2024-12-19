@@ -11,13 +11,14 @@ use App\Http\Controllers\Admin\ClientsController;
 use App\Http\Controllers\Admin\BookingsController;
 use App\Http\Controllers\CalendarController;
 
-// Route::get('/', [HomeController::class, 'index'])->name('admin.home');
-Route::get('', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/home', [HomeController::class, 'index'])->name('admin.home');
+Route::get('', [BookingsController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () { 
     
     Route::resource('users', UserController::class)->names('admin.users');
+    
     Route::resource('apartments', ApartmentsController::class)->names('admin.apartments');
     Route::resource('platforms', PlatformsController::class)->names('admin.platforms');
     Route::resource('concepts', ConceptsController::class)->names('admin.concepts'); 

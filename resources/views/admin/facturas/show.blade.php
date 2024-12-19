@@ -1,28 +1,64 @@
 @extends('adminlte::page')
-
-@section('title', 'Admin-index')
+{{-- Vista de una factura en particular --}}
+@section('title', 'Factura-show')
 
 @section('content_header')
-    <h1>Ficha del usuario</h1>
 @stop
 
 @section('content')
-    <div class="card">
-        <div class="card-body bg-slate-400">
-            <h2>{{ $user->name }}</h2>
-            <h3>{{ $user->email }}</h3>
+    {{-- Sólo podrán ver esta vista los usuarios con el rol de Consultor --}}
+    @can('Consultor')
+        <div class="card">
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Ficha de factura
+            </div>
+            <div class="card-body bg-slate-400">
+                
+                {{-- Fecha, importe, apartamento y nota --}}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="">Fecha</label>
+                            <input value="{{ $factura->fecha }}" class="form-control custom-input" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Importe</label>
+                            <input value="{{ $factura->importe }}" class="form-control custom-input" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Apartamento</label>
+                            <input value="{{ $factura->apartment->name }}" class="form-control custom-input" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="">Nota</label>
+                            <input value="{{ $factura->nota }}" class="form-control custom-input" readonly>
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ route('admin.facturas.index') }}" class="btn btn-secondary btn-sm mb-1">Volver</a>
+                {{-- Factura --}}
+                <div class="form-group">
+                    <div class="row">                      
+                        <div class="col-md-12">
+                            <iframe src="{{ Storage::url($factura->file_uri) }}" width="100%" height="600px"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a href="{{ route('admin.facturas.index') }}" class="btn btn-secondary btn-sm">Volver</a>
+            </div>
         </div>
-        <div class="card-footer">
-            {{ html()->a(route('admin.users.index'), 'Volver')->class('btn btn-success btn-sm') }}
-        </div>
-    </div>
+    @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
+    @endcan
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

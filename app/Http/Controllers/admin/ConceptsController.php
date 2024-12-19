@@ -3,36 +3,69 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ConceptsRequest;
 use Illuminate\Http\Request;
 use App\Models\Concept;
 use Exception;
 use Illuminate\View\View;
-use Livewire\WithPagination;
+
+
+/**
+ * Controlador para gestionar los conceptos.
+ * 
+ * @package App\Http\Controllers\Admin
+ * @version 1.0.0
+ * @since 1.0.0
+ * @see Concept
+ * @see Request
+ * @see View
+ * @see ConceptsRequest Validación de los datos del concepto
+ * @see Exception
+ * @see Controller
+ * @author Manuel Santiago Cabeza
+ */
 class ConceptsController extends Controller
 {
-
-
+    /**
+     * Listado de conceptos
+     * 
+     * @return View Vista con el listado de conceptos
+     */
     public function index(): View
     {
         return view('admin.concepts.index');
     }
 
+    /**
+     * Crear un nuevo concepto
+     * 
+     * @return View Vista con el formulario para crear un nuevo concepto
+     */
     public function create(): View
     {
         return view('admin.concepts.create'); 
     }
 
-    public function store(Request $request)
+    /**
+     * Almacenar un nuevo concepto en la base de datos
+     * 
+     * @param Request $request Datos del formulario
+     * @return RedirectResponse Redirección a la lista de conceptos
+     */
+    public function store(ConceptsRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|min:3|unique:concepts,name',
-        ]);
 
         Concept::create($request->all());
 
         return redirect()->route('admin.concepts.index')->with('success', 'Concepto creado.');
     }
 
+    /**
+     * Muestra un concepto en particular
+     * 
+     * @param Concept $concept Concepto a mostrar
+     * @return View Vista con los detalles del concepto
+     */
     public function show(Concept $concept): View
     {
         return view('admin.concepts.show', compact('concept'));
@@ -43,12 +76,15 @@ class ConceptsController extends Controller
         return view('admin.concepts.edit', compact('concept'));
     }
 
-
-    public function update(Request $request, Concept $concept)
+    /**
+     * Edita un concepto en particular
+     * 
+     * @param Request $request Datos del formulario
+     * @param Concept $concept Concepto a editar
+     * @return RedirectResponse Redirección a la lista de conceptos
+     */
+    public function update(ConceptsRequest $request, Concept $concept)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:concepts,name',
-        ]);
 
         $concepto = Concept::findOrFail($concept->id);
         $concepto->update($request->all());
@@ -57,7 +93,12 @@ class ConceptsController extends Controller
         return redirect()->route('admin.concepts.edit', $concept)->with('info', 'Se ha modificado el concepto.');
     }
 
-
+    /**
+     * Elimina un concepto en particular
+     * 
+     * @param Concept $concept Concepto a eliminar
+     * @return RedirectResponse Redirección a la lista de conceptos
+     */
     public function destroy(Concept $concept)
     {
         try{

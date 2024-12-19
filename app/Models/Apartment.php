@@ -18,8 +18,19 @@ class Apartment extends Model
      * 
      * @var array
      */
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'address',
+        'description',
+        'rooms',
+        'capacidad'
+    ];
 
+    /**
+     * Indica si el modelo debería ser marcado con la fecha de creación y actualización.
+     */
+    public $timestamps = false;
+    
     /**
      * Relación uno a muchos con la tabla de facturas.
      * 

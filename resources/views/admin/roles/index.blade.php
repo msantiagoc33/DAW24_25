@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
-@section('title', 'Roles')
+{{-- Muestra un listado de todos los roles --}}
+@section('title', 'Roles-Index')
 
 @section('content_header')
 
@@ -8,22 +9,17 @@
 
 @section('content')
     <br>
+    {{-- Sólo el Administrador puede ver este listado --}}
     @can('Administrador')
-        @if (session('info'))
-            <div class="alert alert-success">
-                <strong>{{ session('info') }}</strong>
-            </div>
-        @endif
-    @endcan
-    @can('Administrador')
+        {{-- Comprueba si hay roles que mostrar --}}
         @if ($roles->count())
             <div class="card">
                 <div class="card-header">
-                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
                         Lista de Roles
-                    </div>                   
+                    </div>
                 </div>
-                
+
                 <div class="card-body">
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('roles.create') }}">Nuevo</a>
@@ -37,24 +33,23 @@
                             <tr>
                                 <td>{{ $rol->name }}</td>
 
-                                @can('Administrador')
-                                    <td class="text-center" width='10px'>
-                                        <a href="{{ route('roles.edit', $rol) }}"><i class="fas fa-fw fa-regular fa-pen"></i></a>
-                                    </td>
+                                <td class="text-center" width='10px'>
+                                    <a href="{{ route('roles.edit', $rol) }}"><i class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                </td>
 
-                                    <td class="text-center" width='10px'>
-                                        <form action="{{ route('roles.destroy', $rol) }}" method="POST" style="display:inline;"
-                                            id="delete-form-{{ $rol->id }}">
-                                            @csrf
-                                            @method('DELETE')
+                                <td class="text-center" width='10px'>
+                                    <form action="{{ route('roles.destroy', $rol) }}" method="POST" style="display:inline;"
+                                        id="delete-form-{{ $rol->id }}">
+                                        @csrf
+                                        @method('DELETE')
 
-                                            <button type="button" onclick="confirmDelete({{ $rol->id }})"
-                                                style="border:none; background:none; color:rgb(25, 134, 236);">
-                                                <i class="fas fa-fw fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
-                                @endcan
+                                        <button type="button" onclick="confirmDelete({{ $rol->id }})"
+                                            style="border:none; background:none; color:rgb(25, 134, 236);">
+                                            <i class="fas fa-fw fa-trash text-rojo-claro"></i>
+                                        </button>
+                                    </form>
+                                </td>
+
                             </tr>
                         @endforeach
                     </table>
@@ -66,6 +61,7 @@
             </div>
         @endif
     @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index');
     @endcan
 
@@ -76,6 +72,7 @@
 @stop
 
 @section('js')
+    {{-- Confirmación de eliminación mediante una ventana emergente --}}
     <script>
         function confirmDelete(rolId) {
             Swal.fire({

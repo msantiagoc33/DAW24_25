@@ -7,27 +7,66 @@ use App\Models\Factura;
 use App\Models\Apartment;
 use Livewire\WithPagination;
 
+/**
+ * Componente Livewire para la página de facturas.
+ * 
+ * Ese componente permite:
+ * - Filtrar facturas por apartamento, texto, fecha y rango de importe.
+ * - Mostrar la suma total de los importes de las facturas filtradas.
+ * - Restablecer los filtros y cargar las facturas del primer apartamento.
+ * - Cargar las facturas del apartamento seleccionado.
+ * - Buscar facturas según los filtros aplicados.
+ * 
+ */
 class FacturasIndex extends Component
 {
     use WithPagination;
+
+    /**
+     * Define el tema de paginación de Bootstrap.
+     * 
+     * @var string
+     */
     protected $paginationTheme = 'bootstrap';
 
+    /**
+     * Filtros de búsqueda.
+     * 
+     * @var string|null $desde Fecha de inicio.
+     * @var string|null $hasta Fecha de fin.
+     * @var string|null $texto Texto a buscar en los conceptos.
+     * @var float|null $importe_desde Importe mínimo.
+     * @var float|null $importe_hasta Importe máximo.
+     */
     public $desde;
     public $hasta;
     public $texto;
     public $importe_desde;
     public $importe_hasta;
+
+    /**
+     * Propiedades relacionadas con los apartamentos y las facturas.
+     * 
+     * @var Apartment|null $apartamento Apartamento actual seleccionado.
+     * @var Collection $facturas Facturas del apartamento seleccionado.
+     * @var int $apartment_id ID del apartamento seleccionado.
+     * @var Collection $apartamentos Todos los apartamentos.
+     * @var int $apartamentoSeleccionado ID del apartamento seleccionado.
+     * @var float $totalImporte Suma total de los importes de las facturas filtradas.
+     */
     public $apartamento;
     public $facturas;
     public $apartment_id;
-
     public $apartamentos = []; // Todos los apartamentos
     public $apartamentoSeleccionado;  // ID del apartamento seleccionado
-
     public $totalImporte = 0; // Variable para la suma total
 
-    // Función para restablecer los filtros después de haber hecho una búsqueda
     // Y cargar las facturas del primer apartamento
+    /**
+     * Restablece los filtros y carga las facturas del primer apartamento.
+     * 
+     * Carga las facturas del primer apartamento.
+     */
     public function resetFilters()
     {
         // Restablecer los filtros
@@ -54,7 +93,11 @@ class FacturasIndex extends Component
         $this->resetPage();
     }
 
-
+    /**
+     * Inicializa el componente.
+     * 
+     * Carga todos los apartamentos y las facturas del primer apartamento.
+     */
     public function mount()
     {
         // Cargar todos los apartamentos
@@ -77,9 +120,14 @@ class FacturasIndex extends Component
         }
     }
 
-    // No es necesario llamar manualmente a updatedApartamentoSeleccionado desde render. 
-    // Livewire invoca automáticamente este método cuando la propiedad $apartamentoSeleccionado cambia. 
-    // Si lo llamas manualmente, estás duplicando el trabajo y posiblemente provocando errores.
+    /**
+     * Se ejecuta automáticamente cuando cambia el apartamento seleccionado.
+     * 
+     * Si se llama manuelmente, se duplica el trabajo y se pueden producir errores.
+     * 
+     * @param int $apartamentoId ID del apartamento seleccionado.
+     * @return void
+     */
     public function updatedApartamentoSeleccionado($apartamentoId)
     {
         $this->totalImporte = 0; // Restablecer la suma total
@@ -91,6 +139,13 @@ class FacturasIndex extends Component
         $this->facturas = Factura::where('apartment_id', $this->apartamento->id)->get();
     }
 
+    /**
+     * Busca facturas según los filtros aplicados.
+     * 
+     * Este método calcula la suma total de los importes de las facturas filtradas.
+     * 
+     * @return void
+     */
     public function buscarFacturas()
     {
         $query = Factura::query();
@@ -127,6 +182,11 @@ class FacturasIndex extends Component
         $this->facturas = $query->get();
     }
 
+    /**
+     * Renderiza el componente.
+     * 
+     * @return \Illuminate\View\View
+     */
     public function render()
     {
         return view('livewire.admin.facturas-index');

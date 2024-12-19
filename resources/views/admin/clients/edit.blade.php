@@ -1,16 +1,25 @@
 @extends('adminlte::page')
-
+{{-- Vista para editar un cliente --}}
 @section('title', 'Clientes|Crear')
 
 @section('content_header')
-
-
 @stop
 
 @section('content')
+    {{-- Sólo tendrán acceso a la edición de cliente los usuarios con el rol Administrador --}}
     @can('Administrador')
         <br>
+        {{-- Se visualizan los posibles mensajes --}}
         <div class="erroresMensaje">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('info'))
                 <div class="alert alert-success">
                     <strong>{{ session('info') }}</strong>
@@ -24,14 +33,16 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h5>Modificar cliente</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Modificar cliente
             </div>
+
             <form method="POST" action="{{ route('admin.clients.update', $client->id) }}">
                 @csrf
                 @method('PUT')
 
                 <div class="card-body">
+                    {{-- Nombre, pais --}}
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -55,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-
+                    {{-- Teléfono, DNI o pasaporte --}}
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -86,7 +97,7 @@
                             </div>
                         </div>
                     </div>
-
+                    {{-- Dirección y localidad --}}
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -107,7 +118,7 @@
                             </div>
                         </div>
                     </div>
-
+                    {{-- Provincia y CP --}}
                     <div class="form-group">
                         <div class="row">
                             <div class="col-md-6">
@@ -129,6 +140,7 @@
                     </div>
 
                 </div>
+                {{-- botones de acción --}}
                 <div class="card-footer text-right">
                     <button type="submit" class="btn btn-primary">Actualizar</button>
                     <a href="{{ route('admin.clients.index') }}" class="btn btn-secondary">Volver</a>
@@ -136,15 +148,13 @@
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <p>Bienvenido {{ $corto }}</p> <!-- Imprimir el valor de $corto correctamente -->
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
 @section('css')
+    {{-- El campo  que tiene el foco se le cambio el color de fondo --}}
     <style>
         .custom-input:focus {
             background-color: #cce5ff;
@@ -154,6 +164,7 @@
 @stop
 
 @section('js')
+    {{-- Pone en mayúsculas la primera letra de los que escribamos en los inputs --}}
     <script>
         function capitalizeFirstLetter(input) {
             input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);

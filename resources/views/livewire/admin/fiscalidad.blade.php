@@ -1,8 +1,15 @@
-<div>
+<div class="container">
+    {{-- Vista del balance fiscal por año y apartamento --}}
+    {{-- El año tiene que ser superior al año 2000 y no ser mayor que el año actual. --}}
+
     <div class="card w-75 mx-auto">
         <div class="card-header bg-rojo-claro text-center text-white fs-1">
             @if ($year && $apartment_id)
-                Balance fiscal del año {{ $year }} de {{ $nombreApartamento }}
+                @if (!$errors->any())
+                    Balance fiscal del año {{ $year }} de {{ $nombreApartamento }}
+                @else
+                    Por favor, selecciona el apartamento y el año
+                @endif
             @else
                 Por favor, selecciona el apartamento y el año
             @endif
@@ -27,18 +34,18 @@
                         <label for="year">Año</label>
                         <input type="number" name="year" id="year" class="form-control custom-input"
                             placeholder="Año" value="{{ old('year') }}" min="1900" max="{{ date('Y') }}"
-                            wire:change="calculoTotales" wire:model='year' required>
+                            wire:change="calculoTotales" wire:model='year'>
                         @error('year')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
             </div>
-
         </div>
+
         <div class="card-footer">
             @if ($reservasAnnio == null || $reservasAnnio->isEmpty())
-                <h2 class="fs-3 py-3">Aún no hay datos para mostrar. Selecciona año y apartamento.</h2>
+                <h2 class="fs-3 py-3">Aún no hay datos para mostrar. Selecciona apartamento y año.</h2>
             @else
                 @php
                     // Calculo de gatos dividido entre el número de días del año
@@ -75,7 +82,6 @@
                                         <td class="text-right text-success h4">
                                             {{ number_format($Totalimputable, 2, ',', '.') }} €</td>
                                     </tr>
-
                                 </tbody>
                             </table>
                         </div>
@@ -83,5 +89,4 @@
             @endif
         </div>
     </div>
-
 </div>

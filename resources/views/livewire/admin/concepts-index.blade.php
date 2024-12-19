@@ -1,38 +1,46 @@
 <div>
+    {{-- Vista de todos los conceptos de factura --}}
+    {{-- Pueden ser vistos por los usuarios con el rol de Consultor --}}
     @can('Consultor')
-        @if ($conceptos->count())
+        <div class="card">
+            {{-- Muestra posibles mensajes --}}
             @if (session('success'))
                 <div class="alert alert-success">
                     <strong>{{ session('success') }}</strong>
                 </div>
             @endif
-            <div class="card">
-                <div class="card-header bg-azul-claro text-center text-white fs-1">
-                    Lista de Conceptos
-                </div>
 
+            <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
+                Lista de Conceptos
+            </div>
+
+            <br>
+            {{-- Campo de búsqueda de conceptos --}}
+            <input wire:model.live="search" class="form-control w-50 mx-auto" placeholder="Buscar">
+
+            {{-- Comprueba que haya registros --}}
+            @if ($conceptos->count())
                 <div class="card-body">
+                    {{-- El botón de crear nuevo concepto sólo estará visible para el administrador --}}
                     @can('Administrador')
                         <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.concepts.create') }}">Nuevo</a>
                     @endcan
-                    <br>
-                    <input wire:model.live="search" class="form-control" placeholder="Buscar">
-                    <br>
+
+
+
                     <table class="table table-striped table-bordered">
                         <tr>
                             <th>Nombre</th>
-                            <th colspan="3" class="text-center">Acciones</th>
+                            <th colspan="2" class="text-center">Acciones</th>
                         </tr>
                         @foreach ($conceptos as $concepto)
                             <tr>
                                 <td>{{ $concepto->name }}</td>
-                                <td class="text-center" width='10px'>
-                                    <a href="{{ route('admin.concepts.show', $concepto) }}"><i class="fas fa-eye"></i></a>
-                                </td>
+                                {{-- Los botones de edición y eliminación sólo están disponibles para el Administrador --}}
                                 @can('Administrador')
                                     <td class="text-center" width='10px'>
                                         <a href="{{ route('admin.concepts.edit', $concepto) }}"><i
-                                                class="fas fa-fw fa-regular fa-pen"></i></a>
+                                                class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                     </td>
                                     <td class="text-center" width='10px'>
                                         <form action="{{ route('admin.concepts.destroy', $concepto) }}" method="POST"
@@ -42,7 +50,7 @@
 
                                             <button type="button" onclick="confirmDelete({{ $concepto->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
-                                                <i class="fas fa-fw fa-trash"></i>
+                                                <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                             </button>
                                         </form>
                                     </td>
@@ -52,22 +60,21 @@
                     </table>
                 </div>
                 <div class="card-footer">
+                    {{-- Enlaces de paginación --}}
                     {{ $conceptos->links() }}
                 </div>
-            </div>
-        @else
-            <div class="card-body">
-                <strong>No hay registros</strong>
-            </div>
-        @endif
+            @else
+                <div class="card-body text-center text-azul-claro fs-2">
+                    No hay registros con ese criterio de búsqueda
+                </div>
+            @endif
+        </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h1>{{ $corto }} no tiene permisos para ver los conceptos. Puede que no tenga aún roles.</h1>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 
+    {{-- Script para mostrar modal emergente de confirmación de eleminación de registro --}}
     <script>
         function confirmDelete(conceptoId) {
             Swal.fire({

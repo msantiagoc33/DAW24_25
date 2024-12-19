@@ -1,14 +1,18 @@
 <div>
-    @can('Administrador')
+    {{-- Vista de todos los usuarios registrados en el sistema --}}
 
-        @if ($users->count())
-            @if (session('success'))
-                <div class="alert alert-success">
-                    <strong>{{ session('success') }}</strong>
-                </div>
-            @endif
-            <div class="card">
-                <div class="card-header bg-azul-claro text-center text-white fs-1">
+    <div class="card">
+        {{-- Sólo puden acceder los usuarios con el rol de Administrador --}}
+        @can('Administrador')
+            {{-- Si hay usuarios para mostrar --}}
+            @if ($users->count())
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        <strong>{{ session('success') }}</strong>
+                    </div>
+                @endif
+
+                <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
                     Lista de usuarios
                 </div>
 
@@ -31,11 +35,11 @@
 
                                 <td class="text-center" width='10px'>
                                     <a href="{{ route('admin.users.show', $user) }}"><i
-                                            class="fas fa-fw fa-regular fa-eye"></i></a>
+                                            class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
                                 </td>
                                 <td class="text-center" width='10px'>
                                     <a href="{{ route('admin.users.edit', $user) }}"><i
-                                            class="fas fa-fw fa-regular fa-pen"></i></a>
+                                            class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                 </td>
                                 <td class="text-center" width='10px'>
                                     <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
@@ -44,11 +48,10 @@
                                         @method('DELETE')
                                         <button type="button" onclick="confirmDelete({{ $user->id }})"
                                             style="border:none; background:none; color:rgb(25, 134, 236);">
-                                            <i class="fas fa-fw fa-trash"></i>
+                                            <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                         </button>
                                     </form>
                                 </td>
-
                             </tr>
                         @endforeach
 
@@ -57,36 +60,17 @@
                 <div class="card-footer">
                     {{ $users->links() }}
                 </div>
-            </div>
+            @else
+                <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    No hay registros con ese criterio de búsqueda.
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-secondary btn-sm float-left mb-3" href="{{ route('admin.users.index') }}">Volver</a>
+                </div>
+            @endif
         @else
-            <div class="card-body">
-                <strong>No hay registros</strong>
-            </div>
-        @endif
-    @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h1>{{ $corto }} no tiene permisos para ver los usuarios.</h1>
-    @endcan
-    <script>
-        function confirmDelete(userId) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, enviar el formulario
-                    document.getElementById('delete-form-' + userId).submit();
-                }
-            });
-        }
-    </script>
+            {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+            @include('admin.index')
+        @endcan
+    </div>
 </div>

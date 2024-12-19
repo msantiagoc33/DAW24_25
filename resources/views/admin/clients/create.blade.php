@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-
+{{-- Vista para crear un nuevo cliente --}}
 @section('title', 'Clientes|Crear')
 
 @section('content_header')
@@ -11,6 +11,15 @@
     @can('Administrador')
         <br>
         <div class="erroresMensaje">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('info'))
                 <div class="alert alert-success">
                     <strong>{{ session('info') }}</strong>
@@ -24,14 +33,14 @@
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h5>Dar de alta un nuevo cliente</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Dar de alta un nuevo cliente
             </div>
             <form method="POST" action="{{ route('admin.clients.store') }}">
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
-                        <div class="row"> 
+                        <div class="row">
                             <div class="col-md-6">
                                 <input type="text" name="name" class="form-control custom-input" placeholder="Nombre"
                                     value="{{ old('name') }}" required autofocus
@@ -103,7 +112,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <input type="text" name="provincia" class="form-control custom-input"
-                                    placeholder="Pronvincia" value="{{ old('provincia') }}" required oninput="capitalizeFirstLetter(this)">
+                                    placeholder="Pronvincia" value="{{ old('provincia') }}" required
+                                    oninput="capitalizeFirstLetter(this)">
                                 @error('provincia')
                                     <div class="text-danger">{{ $message }}</div>
                                 @enderror
@@ -121,16 +131,18 @@
                 </div>
                 <div class="card-footer text-right">
                     <button type="submit" class="btn btn-primary">Grabar</button>
-                    <a href="{{ route('admin.clients.index') }}" class="btn btn-secondary">Volver</a>
+                    {{-- Si ha recibido el parámetro origin con el valor reservas,
+                    volverá a la vista de crear nueva reserva, en caso contrario volverá al listado de clientes --}}
+                    <a href="{{ request('origin') === 'reservas' ? route('admin.bookings.create') : route('admin.clients.index') }}"
+                        class="btn btn-secondary">
+                        Volver
+                    </a>
                 </div>
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <p>Bienvenido {{ $corto }}</p> <!-- Imprimir el valor de $corto correctamente -->
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
@@ -139,9 +151,10 @@
 @stop
 
 @section('js')
-<script>
-    function capitalizeFirstLetter(input) {
-    input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
-}
-</script>
+    {{-- Cambia a mayúscula la primera letra de lo que escribamos en los campos input --}}
+    <script>
+        function capitalizeFirstLetter(input) {
+            input.value = input.value.charAt(0).toUpperCase() + input.value.slice(1);
+        }
+    </script>
 @stop

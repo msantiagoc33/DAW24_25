@@ -1,24 +1,50 @@
 @extends('adminlte::page')
-
+{{-- Vista para la creación de una plataforma --}}
 @section('title', 'Platforms-create')
 
 @section('content_header')
-
 @stop
 
 @section('content')
+    {{-- Sólo el usuario con el rol Administrador accederá a esta vista --}}
     @can('Administrador')
         <br>
-        @if (session('info'))
-            <div class="alert alert-success">
-                <strong>{{ session('info') }}</strong>
-            </div>
-        @endif
+        {{-- Mostrar los posibles mensajes --}}
+        <div class="errores">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
 
         <div class="card">
-            <div class="card-header">
-                <h5>Crear una nueva plataforma.</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Crear una nueva plataforma.
             </div>
+            
             <div class="card-body">
                 <form method="POST" action="{{ route('admin.platforms.store') }}">
                     @csrf
@@ -39,11 +65,8 @@
             </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para crear plataformas.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 

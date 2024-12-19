@@ -30,7 +30,7 @@ return [
     |
     */
 
-    'use_ico_only' => false,
+    'use_ico_only' => true,
     'use_full_favicon' => false,
 
     /*
@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
-    'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
+    'logo' => '<b>Apartamentos</b>',
+    'logo_img' => 'vendor/adminlte/dist/img/favicon.ico',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'Admin Logo',
+    'logo_img_alt' => 'Logotipo',
 
     /*
     |--------------------------------------------------------------------------
@@ -133,12 +133,13 @@ return [
     |
     */
 
-    'usermenu_enabled' => true,
+    'usermenu_enabled' => false,
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => true,
-    'usermenu_desc' => false,
+    'usermenu_desc' => false, 
     'usermenu_profile_url' => false,
+
 
     /*
     |--------------------------------------------------------------------------
@@ -154,7 +155,8 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => true,['xs' => true, 'lg' => false],
+    'layout_fixed_sidebar' => true,
+    ['xs' => true, 'lg' => false],
     'layout_fixed_navbar' => true,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -191,7 +193,7 @@ return [
     */
 
     'classes_body' => '',
-    'classes_brand' => '',
+    'classes_brand' => 'bg-white',
     'classes_brand_text' => '',
     'classes_content_wrapper' => '',
     'classes_content_header' => '',
@@ -265,6 +267,7 @@ return [
     'password_email_url' => 'password/email',
     'profile_url' => false,
     'disable_darkmode_routes' => false,
+    'use:route_url' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -308,67 +311,76 @@ return [
             'route' => 'admin.bookings.index',
             'icon' => 'fas fa-fw fa-address-book',
             'can' => 'Consultor',
-        ], 
+        ],
         [
             'text' => 'Calendario',
             'route' => 'calendar.index',
             'icon' => 'fa-solid fa-calendar-days',
             'can' => 'Consultor',
-        ], 
+        ],
         [
             'text' => 'Histórico',
             'route' => 'admin.bookings.historico',
             'icon' => 'fas fa-fw fa-landmark',
             'can' => 'Consultor',
-        ], 
+        ],
         [
             'text' => 'Usuarios',
             'route' => 'admin.users.index',
             'icon' => 'fas fa-users fa-fw',
+            'icon_color' => 'red',
             'can' => 'Administrador',
-        ], 
+        ],
         [
             'text' => 'Roles',
             'route' => 'roles.index',
             'icon' => 'fas fa-fw fa-user-tag',
+            'icon_color' => 'red',
             'can' => 'Administrador',
-        ], 
+        ],
         [
             'text' => 'Apartamentos',
             'route' => 'admin.apartments.index',
             'icon' => 'fa-solid fa-building',
+            'can' => 'Consultor',
         ],
         [
             'text' => 'Plataformas',
             'route' => 'admin.platforms.index',
             'icon' => 'fas fa-fw fa-layer-group',
-        ], 
+            'can' => 'Consultor',
+        ],
         [
             'text' => 'Clientes',
-             'route' => 'admin.clients.index',
-             'icon' => 'fas fa-users fa-fw',
-         ],  
+            'route' => 'admin.clients.index',
+            'icon' => 'fas fa-users fa-fw',
+            'can' => 'Consultor',
+        ],
         [
             'text' => 'Conceptos de factura',
             'route' => 'admin.concepts.index',
             'icon' => 'fas fa-fw fa-file-invoice',
-        ],    
+            'can' => 'Consultor',
+        ],
         [
             'text' => 'Gastos',
             'route' => 'admin.facturas.index',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
-        ],  
+            'can' => 'Consultor',
+        ],
         [
             'text' => 'Resumen anual',
             'route' => 'admin.bookings.resumen',
             'icon' => 'fas fa-fw fa-file',
-        ],  
+            'can' => 'Consultor',
+        ],
         [
             'text' => 'IRPF',
             'route' => 'admin.bookings.fiscalidad',
             'icon' => 'fas fa-fw fa-comment-dollar',
-        ],  
-         
+            'can' => 'Consultor',
+        ],
+
     ],
 
     /*
@@ -407,7 +419,7 @@ return [
 
     'plugins' => [
         'Datatables' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

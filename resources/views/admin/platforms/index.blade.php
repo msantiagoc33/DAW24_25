@@ -1,5 +1,6 @@
 @extends('adminlte::page')
 
+{{-- Vista de todas las plataformas --}}
 @section('title', 'Platforms-index')
 
 @section('content_header')
@@ -7,15 +8,17 @@
 @stop
 
 @section('content')
+    {{-- Los usuarios con el rol de Consultor podrán ver esta vista --}}
     @can('Consultor')
         <br>
+        {{-- Comprueba si hay plataformas que mostrar --}}
         @if ($platforms->count())
             <div class="card">
                 <div class="card-header">
-                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
                         Lista de Plataforms
                     </div>
-                    
+
                 </div>
                 <div class="card-body">
                     @can('Administrador')
@@ -26,21 +29,18 @@
                         <tr>
                             <th class="text-center">Nombre</th>
                             @can('Administrador')
-                                <th class="text-center" colspan="3">Acciones</th>
+                                <th class="text-center" colspan="2">Acciones</th>
                             @endcan
                         </tr>
                         @foreach ($platforms as $platform)
                             <tr>
                                 <td>{{ $platform->name }}</td>
+
+                                {{-- Si tiene el rol de Adminstrador podrá editar y/o eliminar plataformas --}}
                                 @can('Administrador')
                                     <td class="text-center" width='10px'>
-                                        <a href="{{ route('admin.platforms.show', $platform) }}"><i
-                                                class="fas fa-fw fa-regular fa-eye"></i></a>
-                                    </td>
-
-                                    <td class="text-center" width='10px'>
                                         <a href="{{ route('admin.platforms.edit', $platform) }}"><i
-                                                class="fas fa-fw fa-regular fa-pen"></i></a>
+                                                class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                     </td>
 
                                     <td class="text-center" width='10px'>
@@ -51,7 +51,7 @@
 
                                             <button type="button" onclick="confirmDelete({{ $platform->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
-                                                <i class="fas fa-fw fa-trash"></i>
+                                                <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                             </button>
                                         </form>
                                     </td>
@@ -67,11 +67,8 @@
             </div>
         @endif
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>A usuario {{ $corto }} no se le ha asignado ningún rol aún.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 
 @stop
@@ -80,6 +77,7 @@
 @stop
 
 @section('js')
+    {{-- Script que muestra una ventana emergente para confirmación de eliminación de registro --}}
     <script>
         function confirmDelete(plataformaId) {
             Swal.fire({

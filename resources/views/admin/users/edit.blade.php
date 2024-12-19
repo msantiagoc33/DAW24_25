@@ -1,24 +1,50 @@
 @extends('adminlte::page')
 
-@section('title', 'Admin-index')
+{{-- Vista para la edición de un usuario --}}
+@section('title', 'Users-edit')
 
 @section('content_header')
-    @can('Administrador')
-        <h1>Modificar usuario y asignar roles.</h1>
-    @endcan
+
 @stop
 
 @section('content')
-    @if (session('info'))
-        <div class="alert alert-success">
-            <strong>{{ session('info') }}</strong>
-        </div>
-    @endif
+
     @can('Administrador')
+        <div class="errores">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+
         <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
                 <h5>Modificar usuario {{ $user->name }}</h5>
             </div>
+
             <form action="{{ route('admin.users.update', $user->id) }}" method="post">
                 @csrf
                 @method('PUT')
@@ -31,12 +57,14 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <input type="text" name="email" class="form-control" value="{{ old('email', $user->email) }}">
                         @error('email')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <h5>Listado de Roles disponibles y asignados.</h5>
 
                     @foreach ($roles as $rol)
@@ -50,32 +78,29 @@
                             </div>
                         </div>
                     @endforeach
-                    {{-- </div> --}}
+
                     <div class="card-footer">
                         <div class="form-group text-right">
                             <button type="submit" class="btn btn-primary btn-sm">Actualizar</button>
                             <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm">Volver</a>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para crear editar usuarios.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index');
     @endcan
 
 
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

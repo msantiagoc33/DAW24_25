@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-
+{{-- Vista que muestra los apartamentos gestionados --}}
 @section('title', 'Apartments-index')
 
 @section('content_header')
@@ -41,7 +41,7 @@
             {{-- Tabla que muestra la lista de apartamentos si existen registros --}}
             <div class="card">
                 <div class="card-header">
-                    <div class="card-header bg-azul-claro text-center text-white fs-1">
+                    <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
                         Lista de Apartamentos
                     </div>
 
@@ -72,13 +72,14 @@
 
                                 <td class="text-center" width='10px'>
                                     <a href="{{ route('admin.apartments.show', $apartment) }}"><i
-                                            class="fas fa-fw fa-regular fa-eye"></i></a>
+                                            class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
                                 </td>
 
+                                {{-- Botones de edición y borrado de apartamento solo disponible para usuarios con el rol de Administrador --}}
                                 @can('Administrador')
                                     <td class="text-center" width='10px'>
                                         <a href="{{ route('admin.apartments.edit', $apartment) }}"><i
-                                                class="fas fa-fw fa-regular fa-pen"></i></a>
+                                                class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                     </td>
 
                                     <td class="text-center" width='10px'>
@@ -90,7 +91,7 @@
 
                                             <button type="button" onclick="confirmDelete({{ $apartment->id }})"
                                                 style="border:none; background:none; color:rgb(25, 134, 236);">
-                                                <i class="fas fa-fw fa-trash"></i>
+                                                <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                             </button>
                                         </form>
                                     </td>
@@ -106,6 +107,9 @@
                 <strong>No hay registros</strong>
             </div>
         @endif
+    @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 
 @stop
@@ -115,6 +119,7 @@
 @stop
 
 @section('js')
+    {{-- Función que muestra una pantalla modal para confirmar el borrado del registro seleccionado --}}
     <script>
         function confirmDelete(apartamentoId) {
             Swal.fire({

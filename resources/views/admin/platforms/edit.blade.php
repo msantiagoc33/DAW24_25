@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-
+{{-- Vista de edición de una plataforma --}}
 @section('title', 'Platform-edit')
 
 @section('content_header')
@@ -7,16 +7,42 @@
 @stop
 
 @section('content')
+    {{-- Sólo los usuarios con el rol de Administrador acceden a esta vista --}}
     @can('Administrador')
-        @if (session('info'))
-            <div class="alert alert-success">
-                <strong>{{ session('info') }}</strong>
-            </div>
-        @endif
+        {{-- Mostrar posibles mensajes --}}
+        <div class="errores">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
 
         <div class="card">
-            <div class="card-header">
-                <h2>Modificar una plataforma</h2>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Modificar la plataform: {{ $platform->name }}
             </div>
 
             <form action="{{ route('admin.platforms.update', $platform->id) }}" method="POST">
@@ -42,11 +68,8 @@
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para modificar plataformas.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
@@ -54,5 +77,5 @@
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

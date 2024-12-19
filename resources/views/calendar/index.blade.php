@@ -1,18 +1,22 @@
 @extends('adminlte::page')
 
+{{-- Vista que muestra el calendario con las reservas --}}
 @section('title', 'Calendario')
 
 @section('content_header')
-    <style>
-       
-    </style>
+
 @stop
 
 @section('content')
     <br>
+    {{-- Podrá ver el calendario los usuarios con el rol de Consultor --}}
     @can('Consultor')
-        <div id="calendar"></div>
+        {{-- Aquí se generará el calendario --}}
+        <div class="container">
+            <div id="calendar"></div>
+        </div>
     @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
     @endcan
 
@@ -23,6 +27,7 @@
 @stop
 
 @section('js')
+    {{-- Este script genera el calendario y los muestra el el div con id igual a calendar --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Contenedor del calendario 
@@ -33,10 +38,10 @@
 
             // Inicializar el calendario
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'multiMonthYear',
-                // initialView: 'dayGridMonth',
+                initialView: 'multiMonthYear', // Se ve todo el año
+                // initialView: 'dayGridMonth', // Se ve sólo un mes
                 events: fechasReservadas,
-                eventColor: 'color-azul-claro', // Color de los eventos
+                eventColor: 'color-azul-claro', // Color de las reservas
                 eventTextColor: '#ffffff',
             });
 

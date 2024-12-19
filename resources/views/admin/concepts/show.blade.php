@@ -1,6 +1,6 @@
 @extends('adminlte::page')
-
-@section('title', 'Admin-index')
+{{-- Vista para mostar un concepto en particular --}}
+@section('title', 'Concepto-show')
 
 @section('content_header')
 
@@ -9,8 +9,8 @@
 @section('content')
     @can('Consultor')
         <div class="card">
-            <div class="card-header">
-                <h2 class="text-center">Ficha de concepto</h2>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Ficha de concepto
             </div>
             <div class="card-body bg-slate-400">
                 <h2>{{ $concept->name }}</h2>
@@ -20,11 +20,8 @@
             </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>A usuario {{ $corto }} no se le ha asignado ningún rol aún.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
@@ -32,5 +29,4 @@
 @stop
 
 @section('js')
-    <script></script>
 @stop

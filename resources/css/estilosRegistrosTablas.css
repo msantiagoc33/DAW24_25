@@ -1,22 +1,18 @@
 /* Estilos para los registros de las tabla */
 .table-striped tbody tr:nth-of-type(even) {
-    background-color: #2845a7;
+    background-color: #33aefa;
     color: white;
-    /* Azul claro */
 }
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: white;
-    /* Blanco */
 }
 
 .table-historico tbody tr:nth-of-type(even) {
     background-color: #28a745;
-    /* Verde claro */
 }
 
 .table-resumen tbody tr:nth-of-type(even) {
     background-color: #a74545;
     color:  white;
-    /* rejo claro */
 }

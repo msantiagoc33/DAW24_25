@@ -1,26 +1,48 @@
 @extends('adminlte::page')
 
+{{-- Vista para la edición de un rol --}}
 @section('title', 'Edit-rol')
 
 @section('content_header')
-
 @stop
 
 @section('content')
+    {{-- Sólo los usuarios con el rol de Administrador pueden editar rol --}}
     @can('Administrador')
-        @if (session('info'))
-            <div class="alert alert-info">
-                <strong>{{ session('info') }}</strong>
-            </div>
-        @endif
-        @if (session('success'))
-            <div class="alert alert-success">
-                <strong>{{ session('success') }}</strong>
-            </div>
-        @endif
+        {{-- Muestra posibles mensajes --}}
+        <div class="errores">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+
         <div class="card">
-            <div class="card-header">
-                <h5>Modificar Rol.</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Modificar rol y/o permisos
             </div>
 
             <div class="card-body">
@@ -39,16 +61,14 @@
                     {{-- Se cargan todos los permisos disponibles y se marcan los que tiene asignados el rol. --}}
                     <div class="form-group mt-3">
                         <label for="permissions">
-                            <h2>Pemisos</h2>
+                            <h2>Permisos</h2>
                         </label>
                         <div class="grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
                             @foreach ($permisos as $permiso)
                                 <div>
                                     <label>
-                                        <input type="checkbox" 
-                                                name="permissions[]" 
-                                                value="{{ $permiso->id }}"
-                                                {{ $rol->permisos->pluck('id')->contains($permiso->id) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="permissions[]" value="{{ $permiso->id }}"
+                                            {{ $rol->permisos->pluck('id')->contains($permiso->id) ? 'checked' : '' }}>
                                         {{ $permiso->name }}
                                     </label>
                                 </div>
@@ -63,11 +83,8 @@
                 </form>
             </div>
         @else
-            @php
-                $nombre = auth()->user()->name; // Obtener el nombre del usuario
-                $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-            @endphp
-            <h2>{{ $corto }} no tiene permisos para modificar roles.</h2>
+            {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+            @include('admin.index');
         @endcan
     @stop
 
@@ -75,8 +92,10 @@
     @stop
 
     @section('js')
+    {{-- Sitúa el cursor en el campo nombre del rol, al final del nombre, al cargar la página --}}
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+
                 var inputField = document.getElementById('name');
 
                 // Establecer el foco y colocar el cursor al final

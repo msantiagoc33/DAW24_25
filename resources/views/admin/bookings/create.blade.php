@@ -1,15 +1,25 @@
 @extends('adminlte::page')
-
+{{-- Vista para la creación de una reserva --}}
 @section('title', 'Reserva-crear')
 
 @section('content_header')
-
 @stop
 
 @section('content')
+    {{-- La vista del formulario de creación de reserva sólo esta disponible para el rol Administrador --}}
     @can('Administrador')
         <br>
+        {{-- Muestra los posibles mensajes --}}
         <div class="erroresMensaje">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             @if (session('info'))
                 <div class="alert alert-success">
                     <strong>{{ session('info') }}</strong>
@@ -44,7 +54,10 @@
                                 </select>
                             </div>
                             <div class="col-md-1 d-flex justify-content-left align-items-left">
-                                <a class="btn btn-info btn-md" href="{{ route('admin.clients.create') }}">Nuevo</a>
+                                {{-- Añadimos el parámetro origin para enviarlo con la ruta 
+                                para saber quién llamo a la ruta y poder volver al origen --}}
+                                <a class="btn btn-info btn-md"
+                                    href="{{ route('admin.clients.create', ['origin' => 'reservas']) }}">Nuevo</a>
                             </div>
 
                             <div class="col-md-4">
@@ -132,18 +145,16 @@
 
                 </div>
 
+                {{-- Botones de grabación y listado de todas las reservas --}}
                 <div class="card-footer text-right">
-                    <button type="submit" class="btn btn-primary">Grabar</button>
+                    <button type="submit" class="btn btn-primary">Grabar</button>                   
                     <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">Volver</a>
                 </div>
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <p>Bienvenido {{ $corto }}</p> <!-- Imprimir el valor de $corto correctamente -->
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 
 @stop
@@ -152,6 +163,7 @@
 @stop
 
 @section('js')
+    {{-- Comprueba la coherencia con la fechas y calcula el número de días alquilado --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const clientSelect = document.getElementById('client-select');
@@ -224,7 +236,7 @@
                 // Calcular la diferencia en días
                 const diffTime = Math.abs(salida - entrada); // Diferencia en milisegundos
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Diferencia en días
-                diasAlquilado.value = diffDays+1;
+                diasAlquilado.value = diffDays + 1;
             });
         });
     </script>

@@ -1,31 +1,45 @@
 @extends('adminlte::page')
 
+{{-- Vista de creación de un apartamento --}}
+
 @section('title', 'Apartments-Crear')
 
 @section('content_header')
 
 @stop
 
-
 @section('content')
+    {{-- Verificar que el usuario sea administrador --}}
     @can('Administrador')
         <br>
-        
+        {{-- Mostar mensajes de error o de exito al grabar un apartamento --}}
         <div class="erroresMensajes">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            {{-- Si hay un mensaje de sesion 'info', se muestra --}}
             @if (session('info'))
                 <div class="alert alert-success">
                     <strong>{{ session('info') }}</strong>
                 </div>
             @endif
+            {{-- Si hay un mensaje de sesion 'success', se muestra --}}
             @if (session('success'))
                 <div class="alert alert-success">
                     <strong>{{ session('success') }}</strong>
                 </div>
             @endif
         </div>
+        {{-- Formulario para dar de alta un nuevo apartamento --}}
         <div class="card">
-            <div class="card-header">
-                <h2>Dar de alta a un nuevo apartamento.</h2>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Dar de alta un nuevo apartamento
             </div>
             <form method="POST" action="{{ route('admin.apartments.store') }}">
                 @csrf
@@ -79,15 +93,9 @@
             </form>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }}, no tiene permiso para crear apartamentos.</h2>
+        @include('admin.index')
     @endcan
 @stop
-
-
 
 @section('css')
 @stop

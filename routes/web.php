@@ -1,12 +1,15 @@
 <?php
 
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\PermisoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\PermisoController;
+
 
 Route::get('/', [UserController::class, 'menu'])->middleware(['auth', 'verified'])->name('menu');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,9 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::post('roles/storeRoleToUser', [RoleController::class, 'storeRoleToUser'])->name('roles.storeRoleToUser');
     Route::get('roles/asignarRoleToUser', [RoleController::class, 'asignarRoleToUser'])->name('roles.asignarRoleToUser');
 
-    Route::get('permisos/index', [PermisoController::class, 'index'])->name('permisos.index');
-    Route::get('permisos/create', [PermisoController::class, 'create'])->name('permisos.create');
-    Route::post('permisos/store', [PermisoController::class, 'store'])->name('permisos.store');
+    // Route::get('permisos/index', [PermisoController::class, 'index'])->name('permisos.index');
+    // Route::get('permisos/create', [PermisoController::class, 'create'])->name('permisos.create');
+    // Route::post('permisos/store', [PermisoController::class, 'store'])->name('permisos.store'); 
 });
 
 require __DIR__.'/auth.php'; 

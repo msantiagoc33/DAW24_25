@@ -1,5 +1,8 @@
-<div>
-    {{-- Errores --}}
+<div class="container">
+    {{-- Vista de los registros históricos, aquellos cuyas reservas están terminadas --}}
+    {{-- El listado se muestra por apartamento y el importe total de las reservas. --}}
+
+    {{-- Mostrar los posibles mensaje de errores --}}
     <div class="erroresMensajes">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -16,36 +19,34 @@
         <div class="card-header bg-verde-claro text-center fs-1">
             Listado <strong>histórico</strong> del apartamento: <strong>{{ $nombreApartamento }}</strong>
         </div>
-
+        {{-- Si hay reservas históricas para mostrar --}}
         @if ($reservas->isNotEmpty())
+            {{-- Lo podran ver los usuarios con el rol de Consultor --}}
             @can('Consultor')
                 <div class="card-body">
-                    @can('Consultor')
-
-                        <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                        <select wire:model.live='selectedApartment' id="selectedApartment"
-                            class="form-control form-select bg-azul-claro text-white">
-                            <option value="">Selecciona un apartamento ...</option>
-                            @foreach ($apartamentos as $apartamento)
-                                <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                            @endforeach
-                        </select>
-                    @endcan
+                    <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
+                    <select wire:model.live='selectedApartment' id="selectedApartment"
+                        class="form-control form-select bg-verde-claro text-white">
+                        @foreach ($apartamentos as $apartamento)
+                            <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                        @endforeach
+                    </select>
                     <br>
-                    <table class="table table-striped table-bordered table-sm table-historico">
+
+                    <table class="table table-striped table-sm table-historico">
                         <thead>
                             <tr>
-                                <th class="text-center align-middle" scope="col">#</th>
-                                <th class="text-center align-middle" scope="col">ENTRADA</th>
-                                <th class="text-center align-middle" scope="col">SALIDA</th>
-                                <th class="text-center align-middle" scope="col">
+                                <th class="text-center align-middle text-verde-claro" scope="col">#</th>
+                                <th class="text-center align-middle text-verde-claro" scope="col">ENTRADA</th>
+                                <th class="text-center align-middle text-verde-claro" scope="col">SALIDA</th>
+                                <th class="text-center align-middle text-verde-claro" scope="col">
                                     <h4><i class="fa-solid fa-house"></i></h4>
                                 </th>
-                                <th class="text-center align-middle" scope="col">
-                                    <h4><i class="fa-solid fa-users"></i></h4>
+                                <th class="text-center align-middle text-verde-claro" scope="col">
+                                    <h4><i class="fa-solid fa-users text-verde-claro"></i></h4>
                                 </th>
-                                <th class="text-center align-middle" scope="col">NOMBRE</th>
-                                <th class="text-center align-middle" colspan="1" scope="col">ACCIÓN</th>
+                                <th class="text-center align-middle text-verde-claro" scope="col">NOMBRE</th>
+                                <th class="text-center align-middle text-verde-claro" colspan="1" scope="col">ACCIÓN</th>
                             </tr>
                         </thead>
 
@@ -61,20 +62,19 @@
 
                                 <tr>
                                     <td class="text-center" style="width: 5%">{{ ++$indiceReservas }}</td>
-                                    <td class="text-center" style="width: 8%">{{ $reserva->fechaEntrada->format('d-m-Y') }}
+                                    <td class="text-center text-nowrap" style="width: 8%">{{ $reserva->fechaEntrada->format('d-m-Y') }}
                                     </td>
-                                    <td class="text-center" style="width: 8%">{{ $reserva->fechaSalida->format('d-m-Y') }}
+                                    <td class="text-center text-nowrap" style="width: 8%">{{ $reserva->fechaSalida->format('d-m-Y') }}
                                     </td>
                                     <td class="text-center" style="width: 8%">{{ $diasDentro }}</td>
                                     <td class="text-center" style="width: 8%">{{ $reserva->huespedes }}</td>
                                     <td class="text-left ml-2" style="width: 35%">{{ $reserva->client->name }}</td>
 
-                                    @can('Consultor')
-                                        <td class="text-center">
-                                            <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
-                                                    class="fas fa-fw fa-eye"></i></a>
-                                        </td>
-                                    @endcan
+                                    {{-- Accion --}}
+                                    <td class="text-center"  style="width: 3%">
+                                        <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
+                                                class="fas fa-fw fa-eye text-magenta-claro"></i></a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -88,16 +88,10 @@
                     <div class="mt-3">{{ $reservas->links() }}</div>
                 </div>
             @else
-                @php
-                    $nombre = auth()->user()->name; // Obtener el nombre del usuario
-                    $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-                @endphp
-                <h2>{{ $corto }}, no puedes ver el histórico de reservas, puede que no tengas aún ningún permiso.
-                    Habla con el
-                    Administrador.</h2> <!-- Imprimir el valor de $corto correctamente -->
+                {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+                @include('admin.index')
             @endcan
         @else
             <h2 class="text-center">No hay reservas para este apartamento.</h2>
         @endcan
-
 </div>

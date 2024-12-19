@@ -1,6 +1,7 @@
 @extends('adminlte::page')
 
-@section('title', 'Admin-index')
+{{-- Vistas de todos los usuarios  --}}
+@section('title', 'Users-index')
 
 @section('content_header')
 
@@ -8,15 +9,43 @@
 
 @section('content')
     <br>
-    @if (session('info'))
-        <div class="alert alert-success">
-            <strong>{{ session('info') }}</strong>
-        </div>
-    @endif
+    {{-- Sólo los usuarios con el rol de Administrador pueden ver este listado de usuarios --}}
     @can('Administrador')
-    <div class="card-header">
-        <h1>Crear nuevo usuario</h1>
-    </div>
+        {{-- Vista de posibles mensajes --}}
+        <div class="errores">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('info'))
+                <div class="alert alert-success">
+                    <strong>{{ session('info') }}</strong>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+
+        <div class="card-header bg-azul-claro text-center text-white fs-1">
+            <h1>Crear nuevo usuario</h1>
+        </div>
+
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{{ route('admin.users.store') }}">
@@ -28,6 +57,7 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <input type="email" name="email" class="form-control ml-10" placeholder="Correo electrónico"
                             value="{{ old('email') }}" required>
@@ -35,12 +65,14 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
                         @error('password')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+
                     <div class="form-group">
                         <input type="password" name="password_confirmation" class="form-control"
                             placeholder="Confirmar Contraseña" required>
@@ -48,6 +80,7 @@
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
+                    
                     <div class="card-footer text-right">
                         <button type="submit" class="btn btn-primary">Grabar</button>
                         <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Volver</a>
@@ -56,20 +89,15 @@
             </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para crear usuarios.</h2>
-        <!-- Imprimir el valor de $corto correctamente -->
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index');
     @endcan
 
 
 @stop
 
 @section('css')
-    {{-- Add here extra stylesheets --}}
-    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
+
 @stop
 
 @section('js')

@@ -1,5 +1,5 @@
 <div>
-    {{-- Errores --}}
+    {{-- Mostrar posibles errores --}}
     <div class="erroresMensajes">
         @if ($errors->any())
             <div class="alert alert-danger">
@@ -24,21 +24,24 @@
         @endif
     </div>
 
+    {{-- Comprobar si hay clientes para mostrar --}}
     @if ($clients->isEmpty())
-        <h2>No hay clientes registradors.</h2>
+        <div class="card-header bg-azul-claro text-center text-white fs-1">
+            <h2>No hay clientes registradors.</h2>
+        </div>
     @else
+        {{-- Podrán ver la lista de clientes los usuarios con rol de Consultor --}}
         @can('Consultor')
             <div class="card">
-                <div class="card-header">
-
-                    <div class="card-header bg-azul-claro text-center text-white fs-1">
-                        Lista de Clientes
-                    </div>
+                <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
+                    Lista de Clientes
                 </div>
 
                 <div class="card-body">
+                    {{-- El botón de añadir nuevo cliente sólo para los Administradores --}}
                     @can('Administrador')
-                        <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.clients.create') }}">Nuevo
+                        <a class="btn btn-info btn-sm float-left mb-3"
+                            href="{{ route('admin.clients.create', ['origen' => 'clientes']) }}">Nuevo
                             cliente</a>
                     @endcan
                     <br>
@@ -88,18 +91,18 @@
                                     <td class="text-center ml-2" style="width: 8%">{{ $cliente->passport }}</td>
                                     <td class="text-center ml-2" style="width: 15%">{{ $cliente->pais->nombre }}</td>
 
-                                    <td class="text-center">
+                                    <td class="text-center"  style="width: 3%">
                                         <a href="{{ route('admin.clients.show', $cliente->id) }}"><i
-                                                class="fas fa-fw fa-regular fa-eye"></i></a>
+                                                class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
                                     </td>
-
+                                    {{-- Los botones de editar y eliminar sólo para el Administrador --}}
                                     @can('Administrador')
-                                        <td class="text-center">
+                                        <td class="text-center"  style="width: 3%">
                                             <a href="{{ route('admin.clients.edit', $cliente->id) }}"><i
-                                                    class="fas fa-fw fa-regular fa-pen"></i></a>
+                                                    class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                         </td>
 
-                                        <td class="text-center" width='auto'>
+                                        <td class="text-center"  style="width: 3%">
                                             <form action="{{ route('admin.clients.destroy', $cliente) }}" method="POST"
                                                 style="display:inline;" id="delete-form-{{ $cliente->id }}">
                                                 @csrf
@@ -107,31 +110,28 @@
 
                                                 <button type="button" onclick="confirmDelete({{ $cliente->id }})"
                                                     style="border:none; background:none; color:rgb(25, 134, 236);">
-                                                    <i class="fas fa-fw fa-trash"></i>
+                                                    <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                                 </button>
                                             </form>
                                         </td>
                                     @endcan
-
                                 </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
+                {{-- Enlace para la paginación --}}
                 <div class="card-footer">
                     <div class="mt-3">{{ $clients->links() }}</div>
                 </div>
             </div>
         @else
-            @php
-                $nombre = auth()->user()->name; // Obtener el nombre del usuario
-                $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-            @endphp
-            <p>Bienvenid@ {{ $corto }}</p> <!-- Imprimir el valor de $corto correctamente -->
+            {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+            @include('admin.index')
         @endcan
     @endif
 
-    <!-- SweetAlert2 JS para la confirmación de eliminación -->
+    {{-- Script para mostrar una ventana modal de confirmación de eliminación de registro --}}
     <script>
         function confirmDelete(clienteId) {
             Swal.fire({

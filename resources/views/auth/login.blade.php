@@ -1,3 +1,28 @@
+{{-- @extends('adminlte::auth.login')
+@section('title', 'Admin-index')
+
+@section('content_header')
+    
+@stop
+
+@section('content')
+<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+    @csrf
+</form>
+
+<a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+    Cerrar sesión
+</a>
+
+@stop
+
+@section('css')
+
+@stop
+
+@section('js')
+
+@stop --}}
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">

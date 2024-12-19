@@ -1,16 +1,18 @@
 @extends('adminlte::page')
 
-@section('title', 'Platforms-index')
+{{-- Vista de una plataforma en particular --}}
+@section('title', 'Platforms-Show')
 
 @section('content_header')
 
 @stop
 
 @section('content')
+    {{-- Sólo los usuarios con el rol de Consultor pueden ver esta vista --}}
     @can('Consultor')
         <div class="card">
-            <div class="card-header">
-                <h2>Ficha de la plataforma</h2>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Ficha de la plataforma: {{ $platform->name }}
             </div>
             <div class="card-body bg-slate-400">
                 <h2>{{ $platform->name }}</h2>
@@ -20,11 +22,8 @@
             </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para ver la ficha de la plataforma.  Es posible que aún no tenga asisgnado roles.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 
@@ -32,5 +31,5 @@
 @stop
 
 @section('js')
-    <script></script>
+
 @stop

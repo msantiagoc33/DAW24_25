@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-
+{{-- Vista de creación de un concepto para facturas --}}
 @section('title', 'Concepto-crear')
 
 @section('content_header')
@@ -8,26 +8,39 @@
 
 @section('content')
     <br>
+    {{-- Sólo podrán crear conceptos de factura los usuarios con el rol de Administrador --}}
     @can('Administrador')
-        <!-- Mostrar el mensaje de éxito -->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+    {{-- Presentación de posibles mensajes --}}
+        <div class="erroresMensaje">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <!-- Mostrar el mensaje de éxito -->
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-        <!-- Mostrar el mensaje de error -->
-        @if (session('error'))
-            <div class="alert alert-danger">
-                {{ session('error') }}
-            </div>
-        @endif
-
+            <!-- Mostrar el mensaje de error -->
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
 
         <div class="card">
-            <div class="card-header">
-                <h5>Dar de alta a un nuevo concepto para facturas</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Dar de alta un nuevo concepto para facturas
             </div>
+
             <div class="card-body">
                 <form method="POST" action="{{ route('admin.concepts.store') }}">
                     @csrf
@@ -39,6 +52,7 @@
                         @enderror
                     </div>
             </div>
+            {{-- Botones de acción --}}
             <div class="card-footer text-right">
                 <button type="submit" class="btn btn-primary">Grabar</button>
                 <a href="{{ route('admin.concepts.index') }}" class="btn btn-secondary">Volver</a>
@@ -47,11 +61,8 @@
         </div>
         </div>
     @else
-        @php
-            $nombre = auth()->user()->name; // Obtener el nombre del usuario
-            $corto = strstr($nombre, ' ', true); // Obtener la parte antes del primer espacio
-        @endphp
-        <h2>{{ $corto }} no tiene permisos para crear conceptos.</h2>
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 
 @stop

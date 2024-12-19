@@ -1,18 +1,34 @@
 @extends('adminlte::page')
-
+{{-- Vista que muestra en detalle una reserva --}}
 @section('title', 'Reserva-Mostrar')
 
 @section('content_header')
 @stop
 
 @section('content')
+    {{-- Tendrán acceso a la vista los usuarios con el rol de Consultor --}}
     @can('Consultor')
         <div class="card">
-            <div class="card-header">
-                <h1>Ficha de reserva en <strong class="ml-2 text-primary">{{ $booking->apartment->name }}</strong></h1>
-                <h2>Grabado por <strong class="ml-2 text-success">{{ $booking->user->name }}</strong></h2>
+            {{-- 
+            Se utiliza la misma vista para ver en detalle una reserva actual o una reserva de histórico
+            para diferenciarlas y saber dónde estamos, cambia los colores en función de qué tipo de reserva estoy viendo
+            actual o histórica 
+            --}}
+            <div
+                class="card-header {{ $booking->historico == 0 ? 'bg-azul-claro' : 'bg-verde-claro' }} text-center text-white fs-1">
+                <h1>
+                    Ficha de reserva en 
+                    <strong
+                        class="{{ $booking->historico == 0 ? 'text-verde-claro' : 'text-azul-claro' }}">{{ $booking->apartment->name }}
+                    </strong>
+                </h1>
+                <h2>
+                    Grabada por 
+                    <strong
+                        class="{{ $booking->historico == 0 ? 'text-verde-claro' : 'text-azul-claro' }}">{{ $booking->user->name }}
+                    </strong>
+                </h2>
             </div>
-
 
             <div class="card-body">
                 {{-- Nombre del cliente, plataforma y apartamento --}}
@@ -85,14 +101,18 @@
                     </div>
                 </div>
             </div>
+
             <div class="card-footer">
                 @if ($booking->historico == 0)
-                    <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">Volver</a>
+                    <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary btn-sm">Volver a reservas</a>
                 @else
                     <a href="{{ route('admin.bookings.historico') }}" class="btn btn-secondary btn-sm">Volver al histórico</a>
                 @endif
             </div>
         </div>
+    @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
     @endcan
 @stop
 

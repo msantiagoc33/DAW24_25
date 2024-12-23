@@ -24,61 +24,95 @@
             {{-- Lo podran ver los usuarios con el rol de Consultor --}}
             @can('Consultor')
                 <div class="card-body">
-                    <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                    <select wire:model.live='selectedApartment' id="selectedApartment"
-                        class="form-control form-select bg-verde-claro text-white">
-                        @foreach ($apartamentos as $apartamento)
-                            <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="w-75 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <select wire:model.live="selectedApartment"
+                                    class="form-control text-gris-claro rounded shadow w-auto">
+                                    <option value="1">Selecciona un apartamento</option>
+                                    @foreach ($apartamentos as $apartamento)
+                                        <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <input type="text" class="form-control rounded shadow w-auto" wire:model.live="search"
+                                    placeholder="Buscar...">
+                            </div>
+
+                            <div class="col">
+                                <select class="form-control text-gris-claro rounded shadow w-auto"
+                                    wire:model.live="porPagina">
+                                    <option value="5">5 por página</option>
+                                    <option value="10">10 por página</option>
+                                    <option value="15">15 por página</option>
+                                    <option value="25">25 por página</option>
+                                    <option value="50">50 por página</option>
+                                    <option value="100">100 por página</option>
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                @if ($this->search !== '')
+                                    <button wire:click='clear' class="form-control rounded shadow w-auto">X</button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
                     <br>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm table-historico">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">#</th>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">ENTRADA</th>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">SALIDA</th>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">
+                                        <h4><i class="fa-solid fa-house"></i></h4>
+                                    </th>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">
+                                        <h4><i class="fa-solid fa-users text-verde-claro"></i></h4>
+                                    </th>
+                                    <th class="text-center align-middle text-verde-claro" scope="col">NOMBRE</th>
+                                    <th class="text-center align-middle text-verde-claro" colspan="1" scope="col">
+                                        ACCIÓN</th>
+                                </tr>
+                            </thead>
 
-                    <table class="table table-striped table-sm table-historico">
-                        <thead>
-                            <tr>
-                                <th class="text-center align-middle text-verde-claro" scope="col">#</th>
-                                <th class="text-center align-middle text-verde-claro" scope="col">ENTRADA</th>
-                                <th class="text-center align-middle text-verde-claro" scope="col">SALIDA</th>
-                                <th class="text-center align-middle text-verde-claro" scope="col">
-                                    <h4><i class="fa-solid fa-house"></i></h4>
-                                </th>
-                                <th class="text-center align-middle text-verde-claro" scope="col">
-                                    <h4><i class="fa-solid fa-users text-verde-claro"></i></h4>
-                                </th>
-                                <th class="text-center align-middle text-verde-claro" scope="col">NOMBRE</th>
-                                <th class="text-center align-middle text-verde-claro" colspan="1" scope="col">ACCIÓN</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @php
-                                $indiceReservas = $reservas->firstItem() - 1; // Calcula el índice inicial
-                            @endphp
-
-                            @foreach ($reservas as $reserva)
+                            <tbody>
                                 @php
-                                    $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false);
+                                    $indiceReservas = $reservas->firstItem() - 1; // Calcula el índice inicial
                                 @endphp
 
-                                <tr>
-                                    <td class="text-center" style="width: 5%">{{ ++$indiceReservas }}</td>
-                                    <td class="text-center text-nowrap" style="width: 8%">{{ $reserva->fechaEntrada->format('d-m-Y') }}
-                                    </td>
-                                    <td class="text-center text-nowrap" style="width: 8%">{{ $reserva->fechaSalida->format('d-m-Y') }}
-                                    </td>
-                                    <td class="text-center" style="width: 8%">{{ $diasDentro }}</td>
-                                    <td class="text-center" style="width: 8%">{{ $reserva->huespedes }}</td>
-                                    <td class="text-left ml-2" style="width: 35%">{{ $reserva->client->name }}</td>
+                                @foreach ($reservas as $reserva)
+                                    @php
+                                        $diasDentro = $reserva->fechaEntrada->diffInDays($reserva->fechaSalida, false);
+                                    @endphp
 
-                                    {{-- Accion --}}
-                                    <td class="text-center"  style="width: 3%">
-                                        <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
-                                                class="fas fa-fw fa-eye text-magenta-claro"></i></a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                    <tr>
+                                        <td class="text-center" style="width: 5%">{{ ++$indiceReservas }}</td>
+                                        <td class="text-center text-nowrap" style="width: 8%">
+                                            {{ $reserva->fechaEntrada->format('d-m-Y') }}
+                                        </td>
+                                        <td class="text-center text-nowrap" style="width: 8%">
+                                            {{ $reserva->fechaSalida->format('d-m-Y') }}
+                                        </td>
+                                        <td class="text-center" style="width: 8%">{{ $diasDentro }}</td>
+                                        <td class="text-center" style="width: 8%">{{ $reserva->huespedes }}</td>
+                                        <td class="text-left ml-2" style="width: 35%">{{ $reserva->client->name }}</td>
+
+                                        {{-- Accion --}}
+                                        <td class="text-center" style="width: 3%">
+                                            <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
+                                                    class="fas fa-fw fa-eye text-magenta-claro"></i></a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div class="card-footer">
@@ -92,6 +126,24 @@
                 @include('admin.index')
             @endcan
         @else
-            <h2 class="text-center">No hay reservas para este apartamento.</h2>
+            <div class="card-body">
+                @can('Consultor')
+                    <div
+                        class="w-25 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                @if ($this->search !== '')
+                                    <button wire:click='clear' class="form-control rounded shadow w-auto">X</button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center fs-2 text-gris-claro">
+                        <p>No hay reservas en el histórico para este apartamento.</p>
+                        <p>O no hay coincidencias con la búsqueda.</p>
+                    </div>
+                @endcan
+            </div>
         @endcan
 </div>

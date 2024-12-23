@@ -11,26 +11,28 @@
             <div class="card">
                 <div class="card-header bg-rojo-claro text-center text-white fs-1">Resumen anual por apartamento</div>
                 <div class="card-body">
-                    <table class="table-resumen table table-bordered table-sm">
-                        <thead>
-                            <tr class="text-center">
-                                <th>AÑO</th>
-                                <th>APARTAMENTO</th>
-                                <th>DIAS ALQUILADO</th>
-                                <th>IMPORTE TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($totalPorYears as $year)
-                                <tr>
-                                    <td class="text-center">{{ $year['anio'] }}</td>
-                                    <td>{{ $year->apartment->name }}</td>
-                                    <td class="text-end pe-5">{{ $year['total_dias'] }}</td>
-                                    <td class="text-end pe-5">{{ number_format($year['total'], 2, ',', '.') }} €</td>
+                    <div class="table-responsive">
+                        <table class="table-resumen table table-sm">
+                            <thead>
+                                <tr class="text-center">
+                                    <th>AÑO</th>
+                                    <th>APARTAMENTO</th>
+                                    <th>DIAS ALQUILADO</th>
+                                    <th>IMPORTE TOTAL</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($totalPorYears as $year)
+                                    <tr>
+                                        <td class="text-center">{{ $year['anio'] }}</td>
+                                        <td>{{ $year->apartment->name }}</td>
+                                        <td class="text-end pe-5">{{ $year['total_dias'] }}</td>
+                                        <td class="text-end pe-5">{{ number_format($year['total'], 2, ',', '.') }} €</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         @else

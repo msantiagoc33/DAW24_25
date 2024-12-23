@@ -15,7 +15,7 @@
             @endif
 
         </div>
-
+{{-- Selección del apartamento y años del que queremos mostrar el balance fiscal --}}
         <div class="card-body">
             <div class="form-group">
                 <div class="row">
@@ -57,21 +57,21 @@
 
                 <div class="py-12">
                     <div class="input-group flex row">
-                        <div class="container mx-auto d-flex justify-content-around">
+                        <div class="mx-auto d-flex justify-content-around">
                             <h2 class="display-6">Días alquilado: {{ $totalDias }}</h2>
                         </div>
-                        <div class="w-75 container mx-auto">
-                            <table class="table">
+                        <div class="table-responsive">
+                            <table class="table table-sm">
                                 <tbody>
-                                    <tr>
-                                        <td class="h4">Total ingresos en {{ $year }}: </td>
-                                        <td class="text-right text-danger h4">
+                                    <tr class="h4">
+                                        <td>Total ingresos en {{ $year }}: </td>
+                                        <td class="text-right text-danger">
                                             {{ number_format($totalHistorico, 2, ',', '.') }} € </td>
                                     </tr>
 
-                                    <tr>
-                                        <td class="h4">Total gastos en {{ $year }}:</td>
-                                        <td class="text-right text-danger h4">
+                                    <tr class="h4">
+                                        <td>Total gastos en {{ $year }}:</td>
+                                        <td class="text-right text-danger">
                                             {{ number_format($totalFacturas, 2, ',', '.') }} €</td>
                                     </tr>
 
@@ -79,7 +79,7 @@
                                     <tr class="h4">
                                         <td class="">Gastos computables por {{ $totalDias }} días
                                             alquilado:</td>
-                                        <td class="text-right text-success h4">
+                                        <td class="text-right text-success">
                                             {{ number_format($Totalimputable, 2, ',', '.') }} €</td>
                                     </tr>
                                 </tbody>

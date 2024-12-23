@@ -3,7 +3,6 @@
 @section('title', 'Reservas-index')
 
 @section('content_header')
-
     <br>
     @can('Consultor')
         {{-- Carga el componente bookings-index --}}
@@ -19,26 +18,24 @@
 @stop
 
 @section('js')
-    {{-- Script que muestra la fecha y la hora actual actualizándose cada segundo --}}
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const options = {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                hour12: false
-            };
-            document.getElementById('clock').innerHTML = now.toLocaleString('es-ES', options);
+       {{-- Script que muestra una ventana modal para confirmar eliminación de registro --}}
+       <script>
+        function confirmDelete(clienteId) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción no se puede deshacer.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma, enviar el formulario
+                    document.getElementById('delete-form-' + clienteId).submit();
+                }
+            });
         }
-
-        // Actualiza la hora inmediatamente al cargar la página
-        updateClock();
-
-        // Actualiza la hora cada segundo
-        setInterval(updateClock, 1000);
-    </script>
+    </script> 
 @stop

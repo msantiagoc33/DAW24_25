@@ -1,4 +1,4 @@
-<div>
+<div class="container">
     {{-- Vista de todos los usuarios registrados en el sistema --}}
 
     <div class="card">
@@ -20,42 +20,43 @@
                     <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.users.create') }}">Nuevo</a>
                     <input wire:model.live='search' class="form-control" placeholder="Buscar por nombre o correo">
                     <br>
-                    <table class="table table-striped table-bordered">
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th colspan="3" class="text-center">Acciones</th>
-
-                        </tr>
-
-                        @foreach ($users as $user)
+                    <div class="table-responsive">
+                        <table class="table table-striped table-sm">
                             <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th colspan="3" class="text-center">Acciones</th>
 
-                                <td class="text-center" width='10px'>
-                                    <a href="{{ route('admin.users.show', $user) }}"><i
-                                            class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
-                                </td>
-                                <td class="text-center" width='10px'>
-                                    <a href="{{ route('admin.users.edit', $user) }}"><i
-                                            class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
-                                </td>
-                                <td class="text-center" width='10px'>
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                        style="display:inline;" id="delete-form-{{ $user->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" onclick="confirmDelete({{ $user->id }})"
-                                            style="border:none; background:none; color:rgb(25, 134, 236);">
-                                            <i class="fas fa-fw fa-trash text-rojo-claro"></i>
-                                        </button>
-                                    </form>
-                                </td>
                             </tr>
-                        @endforeach
 
-                    </table>
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+
+                                    <td class="text-center" width='10px'>
+                                        <a href="{{ route('admin.users.show', $user) }}"><i
+                                                class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
+                                    </td>
+                                    <td class="text-center" width='10px'>
+                                        <a href="{{ route('admin.users.edit', $user) }}"><i
+                                                class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                    </td>
+                                    <td class="text-center" width='10px'>
+                                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                            style="display:inline;" id="delete-form-{{ $user->id }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="button" onclick="confirmDelete({{ $user->id }})"
+                                                style="border:none; background:none; color:rgb(25, 134, 236);">
+                                                <i class="fas fa-fw fa-trash text-rojo-claro"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
                 </div>
                 <div class="card-footer">
                     {{ $users->links() }}

@@ -32,40 +32,81 @@
 
         {{-- Comprueba si hay reservas para mostrar --}}
         @if ($reservas->isNotEmpty())
+
             {{-- Si tiene el rol de Consultor podrá ver la lista de reservas --}}
             @can('Consultor')
                 <div class="card-body">
                     {{-- si tiene el rol de Administrador podrá ver el botón de crear reserva --}}
-                    @can('Administrador')
-                        <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
-                            reserva</a>
-                    @endcan
 
-                    <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                    <select wire:model.live='selectedApartment' id="selectedApartment"
-                        class="form-control form-select bg-azul-claro text-gris-claro">
-                        @foreach ($apartamentos as $apartamento)
-                            <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <select wire:model.live="selectedApartment"
+                                    class="form-control text-gris-claro rounded shadow w-auto">
+                                    <option value="1">Selecciona un apartamento</option>
+                                    @foreach ($apartamentos as $apartamento)
+                                        <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                <input type="text" class="form-control rounded shadow w-auto" wire:model.live="search"
+                                    placeholder="Buscar...">
+                            </div>
+
+                            <div class="col">
+                                <select class="form-control text-gris-claro rounded shadow w-auto"
+                                    wire:model.live="porPagina">
+                                    <option value="5">5 por página</option>
+                                    <option value="10">10 por página</option>
+                                    <option value="15">15 por página</option>
+                                    <option value="25">25 por página</option>
+                                    <option value="50">50 por página</option>
+                                    <option value="100">100 por página</option>
+                                </select>
+                            </div>
+
+                            <div class="col">
+                                @if ($this->search !== '')
+                                    <button wire:click='clear' class="form-control rounded shadow w-auto">X</button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    @can('Administrador')
+                        <div class="float-left">
+                            <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
+                                reserva</a>
+                        </div>
+                    @endcan
                     <br>
+
                     <div class="table-responsive">
-                        <table class="table table-striped table-sm">
+                        <table class="table table-striped table-sm" id="bookings-table">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell" scope="col">#</th>
+                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell"
+                                        scope="col">#
+                                    </th>
                                     <th class="text-center align-middle text-azul-claro" scope="col">ENTRADA</th>
                                     <th class="text-center align-middle text-azul-claro" scope="col">SALIDA</th>
-                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell" scope="col">DÍAS PARA ENTRAR
+                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell"
+                                        scope="col"><i class="fa-solid fa-right-to-bracket fs-4"></i>
                                     </th>
-                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell" scope="col">DÍAS PARA SALIR</th>
-                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell" scope="col">
-                                        <h4><i class="fa-solid fa-house text-azul-claro"></i></h4>
+                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell"
+                                        scope="col"><i class="fa-solid fa-right-from-bracket fs-4"></i></th>
+                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell"
+                                        scope="col">
+                                        <i class="fa-solid fa-house text-azul-claro fs-4"></i>
                                     </th>
                                     <th class="text-center align-middle text-azul-claro" scope="col">
-                                        <h4><i class="fa-solid fa-users text-azul-claro"></i></h4>
+                                        <i class="fa-solid fa-users text-azul-claro fs-4"></i>
                                     </th>
-                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell" scope="col">NOMBRE</th>
+                                    <th class="text-center align-middle text-azul-claro d-none d-sm-table-cell"
+                                        scope="col">
+                                        NOMBRE</th>
 
                                     @can('Administrador')
                                         <th class="text-center align-middle text-azul-claro" colspan="3" scope="col">
@@ -92,18 +133,23 @@
                                     @endphp
 
                                     <tr class="{{ $reserva->fechaEntrada <= $hoy ? 'bg-verde-claro' : '' }}">
-                                        <td class="text-center d-none d-sm-table-cell" style="width: 5%">{{ ++$indiceReservas }}</td>
+                                        <td class="text-center d-none d-sm-table-cell" style="width: 5%">
+                                            {{ ++$indiceReservas }}</td>
                                         <td class="text-nowrap text-center" style="width: 8%">
                                             {{ $reserva->fechaEntrada->format('d-m-Y') }}
                                         </td>
                                         <td class="text-nowrap text-center" style="width: 8%">
                                             {{ $reserva->fechaSalida->format('d-m-Y') }}
                                         </td>
-                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">{{ $diasParaEntrar }}</td>
-                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">{{ $diasParaSalir }}</td>
-                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">{{ $diasDentro }}</td>
+                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">
+                                            {{ $diasParaEntrar == 0 ? '-' : $diasParaEntrar }}</td>
+                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">
+                                            {{ $diasParaSalir }}</td>
+                                        <td class="text-center d-none d-sm-table-cell" style="width: 8%">
+                                            {{ $diasDentro }}</td>
                                         <td class="text-center" style="width: 8%">{{ $reserva->huespedes }}</td>
-                                        <td class="text-left ml-2 d-none d-sm-table-cell" style="width: 35%">{{ $reserva->client->name }}</td>
+                                        <td class="text-left ml-2 d-none d-sm-table-cell" style="width: 35%">
+                                            {{ $reserva->client->name }}</td>
 
                                         <td class="text-center">
                                             <a href="{{ route('admin.bookings.show', $reserva->id) }}"><i
@@ -154,42 +200,22 @@
         @else
             <div class="card-body">
                 @can('Consultor')
-                    <label for="apartment-select" class="form-label">Selecciona un Apartamento:</label>
-                    <select wire:model.live='selectedApartment' id="selectedApartment"
-                        class="form-control form-select bg-azul-claro text-white">
-                        <option value="">Selecciona un apartamento ...</option>
-                        @foreach ($apartamentos as $apartamento)
-                            <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
-                        @endforeach
-                    </select>
-                    <br>
-                @endcan
-            </div>
+                    <div class="w-25 p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
+                        <div class="row g-2 align-items-center">
+                            <div class="col">
+                                <button wire:click='clear' class="bg-azul-claro text-gris-claro form-control rounded shadow w-auto">X</button>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="card-footer">
-                <h2 class="text-center">No hay reservas para este apartamento.</h2>
+                    <div class="card-footer text-center fs-2 text-gris-claro">
+                        <p>No hay reservas para este apartamento.</p>
+                        <p>O no hay coincidencias con la búsqueda.</p>
+                    </div>
+                @endcan
             </div>
         @endif
     </div>
-    {{-- Script que muestra una ventana modal para confirmar eliminación de registro --}}
-    <script>
-        function confirmDelete(clienteId) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Si el usuario confirma, enviar el formulario
-                    document.getElementById('delete-form-' + clienteId).submit();
-                }
-            });
-        }
-    </script>
+
 
 </div>

@@ -27,7 +27,7 @@
             @endif
         </div>
 
-        <div class="card small">
+        <div class="card">
             {{-- Comprueba que haya apartamento seleccionado y que haya facturas para ese apartamento --}}
             @if ($apartamento && $apartamento->facturas->isNotEmpty())
                 <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
@@ -38,7 +38,7 @@
                     <label class="fs-5" for="apartamento">Selecciona un Apartamento:</label>
                     <select wire:model.live="apartamentoSeleccionado" id="apartamento"
                         class="form-control form-select bg-azul-claro text-white">
-                        <option value="">Selecciona un apartamento...</option>
+                        <option value="1">Selecciona un apartamento...</option>
                         @foreach ($apartamentos as $apto)
                             <option value="{{ $apto->id }}">{{ $apto->name }}</option>
                         @endforeach
@@ -54,7 +54,7 @@
                     <button id="toggleForm" class="btn btn-primary btn-sm float-right mr-3">Consultas</button>
 
                     {{-- Botón para recargar todas las facturas despues de haber hecho una consulta --}}
-                    <button wire:click='resetFilters' class="btn btn-secondary btn-sm float-right mr-3">Recargar</button>
+                    <button wire:click='resetFilters' class="btn btn-secondary btn-sm float-right mr-3">X</button>
                     <br>
                     {{-- Formulario de búsqueda que se muestra al pulsar el botón de Consultas --}}
                     <div id="hiddenForm" class="hidden w-50 bg-light ">
@@ -116,7 +116,7 @@
                     <br>
                     {{-- Tabla con los registros de facturas --}}
                     <div class="table-responsive">
-                        <table class="table table-striped" id="facturas">
+                        <table class="table table-striped table-sm" id="facturas">
                             <thead>
                                 <tr>
                                     <th class="text-center d-none d-sm-table-cell">ID</th>
@@ -134,9 +134,10 @@
                             </thead>
 
                             <tbody>
-                                @foreach ($facturas as $factura)
+                                @php $contador = 1; @endphp
+                                @foreach ($facturas as $index => $factura)
                                     <tr>
-                                        <td class="text-center align-middle d-none d-sm-table-cell" style="width: 5%">{{ $factura->id }}</td>
+                                        <td class="text-center align-middle d-none d-sm-table-cell" style="width: 5%">{{  $index + 1 }}</td>
 
                                         <td class="text-nowrap text-center align-middle" style="width: 10%">
                                             {{ $factura->fecha }}

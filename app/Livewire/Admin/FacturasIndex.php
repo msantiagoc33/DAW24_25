@@ -165,7 +165,7 @@ class FacturasIndex extends Component
         }
 
         if (!empty($this->hasta)) {
-            $query->where('fecha', '>=', $this->hasta);
+            $query->where('fecha', '<=', $this->hasta);
         }
 
         if (!empty($this->importe_desde)) {

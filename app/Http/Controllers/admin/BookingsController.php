@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookingRequest;
-use App\Models\Booking;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+
+use App\Models\Booking;
 use App\Models\Client;
 use App\Models\Platform;
 use App\Models\Apartment;
-use Illuminate\Contracts\View\View;
+
 
 /**
  * Controlador para gestionar las reservas.
@@ -176,4 +179,5 @@ class BookingsController extends Controller
     {
         return view('admin.bookings.fiscalidad');
     }
+
 }

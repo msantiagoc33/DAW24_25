@@ -124,7 +124,7 @@
 
                             <div class="col-md-3">
                                 <label for="importe">Importe</label>
-                                <input type="number" step="" name="importe" id="importe"
+                                <input type="number" step="0.01" name="importe" id="importe"
                                     class="form-control custom-input" placeholder="Importe" value="{{ old('importe') }}"
                                     required>
                                 @error('importe')

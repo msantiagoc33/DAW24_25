@@ -32,9 +32,12 @@
                 </div>
             @endif
         </div>
+
         <div class="card-header bg-azul-claro text-center text-white fs-1">
             Modificar reserva
         </div>
+        
+        {{-- Formulario para la edición de la reserva --}}
         <div class="card">
             <form method="POST" action="{{ route('admin.bookings.update', $booking->id) }}">
                 @csrf
@@ -126,7 +129,7 @@
 
                             <div class="col-md-3">
                                 <label for="importe">Importe</label>
-                                <input type="number" step="" name="importe" id="importe"
+                                <input type="number" step="0.01" name="importe" id="importe"
                                     class="form-control custom-input" value="{{ old('importe', $booking->importe ?? '') }}"
                                     required>
                                 @error('importe')

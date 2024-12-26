@@ -28,7 +28,7 @@ class BookingRequest extends FormRequest
             'fechaEntrada' => 'required|date', 
             'fechaSalida' => 'required|date',
             'huespedes' => 'required|integer|min:1',
-            'importe' => 'required|integer|min:0',
+            'importe' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/',
             'comentario' => 'nullable|string|max:500',
             'platform_id' => 'required|exists:platforms,id', // Aseguramos que la plataforma existe en la columna id de la tabla platforms
             'client_id' => 'required|exists:clients,id', // Aseguramos que el cliente existe en la columna id de la tabla clients

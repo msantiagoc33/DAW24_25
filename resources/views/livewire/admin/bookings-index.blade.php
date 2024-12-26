@@ -38,7 +38,8 @@
                 <div class="card-body">
                     {{-- si tiene el rol de Administrador podrá ver el botón de crear reserva --}}
 
-                    <div class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
+                    <div
+                        class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-72">
                         <div class="row g-2 align-items-center">
                             <div class="col">
                                 <select wire:model.live="selectedApartment"
@@ -76,9 +77,16 @@
                     </div>
 
                     @can('Administrador')
-                        <div class="float-left">
-                            <a class="btn btn-info btn-sm float-right mb-3" href="{{ route('admin.bookings.create') }}">Nueva
-                                reserva</a>
+                        <div class="p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-72">
+                            <div class="">
+                                <a class="btn btn-info btn-sm" href="{{ route('admin.bookings.create') }}">Nueva
+                                    reserva</a>
+                            </div>
+                            <div class="">
+                                <a class="btn btn-primary btn-sm ml-3" href="{{ route('pdfs.index', $selectedApartment) }}" target="_blank">
+                                    Descargar PDF
+                                </a>
+                            </div>
                         </div>
                     @endcan
                     <br>
@@ -203,7 +211,8 @@
                     <div class="w-25 p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
                         <div class="row g-2 align-items-center">
                             <div class="col">
-                                <button wire:click='clear' class="bg-azul-claro text-gris-claro form-control rounded shadow w-auto">X</button>
+                                <button wire:click='clear'
+                                    class="bg-azul-claro text-gris-claro form-control rounded shadow w-auto">X</button>
                             </div>
                         </div>
                     </div>

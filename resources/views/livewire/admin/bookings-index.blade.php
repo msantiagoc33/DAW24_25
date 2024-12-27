@@ -34,10 +34,11 @@
         @if ($reservas->isNotEmpty())
 
             {{-- Si tiene el rol de Consultor podrá ver la lista de reservas --}}
-            @can('Consultor')
+            @if (auth()->user()->hasRole('Administrador') ||
+                    auth()->user()->hasRole('Editor') ||
+                    auth()->user()->hasRole('Consultor'))
                 <div class="card-body">
                     {{-- si tiene el rol de Administrador podrá ver el botón de crear reserva --}}
-
                     <div
                         class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-72">
                         <div class="row g-2 align-items-center">
@@ -52,8 +53,8 @@
                             </div>
 
                             <div class="col">
-                                <input type="text" class="form-control rounded shadow w-auto" wire:model.live="search"
-                                    placeholder="Buscar...">
+                                <input type="text" class="form-control rounded shadow w-auto"
+                                    wire:model.live="search" placeholder="Buscar...">
                             </div>
 
                             <div class="col">
@@ -83,7 +84,8 @@
                                     reserva</a>
                             </div>
                             <div class="">
-                                <a class="btn btn-primary btn-sm ml-3" href="{{ route('pdfs.index', $selectedApartment) }}" target="_blank">
+                                <a class="btn btn-primary btn-sm ml-3" href="{{ route('pdfs.index', $selectedApartment) }}"
+                                    target="_blank">
                                     Descargar PDF
                                 </a>
                             </div>
@@ -116,13 +118,18 @@
                                         scope="col">
                                         NOMBRE</th>
 
-                                    @can('Administrador')
-                                        <th class="text-center align-middle text-azul-claro" colspan="3" scope="col">
+                                    @if (auth()->user()->hasRole('Administrador'))
+                                        <th class="text-center align-middle text-azul-claro" colspan="3"
+                                            scope="col">
                                             ACCIONES</th>
-                                    @elsecan('Consultor')
-                                        <th class="text-center align-middle text-azul-claro" colspan="1" scope="col">
+                                    @elseif(auth()->user()->hasRole('Editor'))
+                                        <th class="text-center align-middle text-azul-claro" colspan="2"
+                                            scope="col">
+                                            ACCIONES</th>
+                                    @elseif(auth()->user()->hasRole('Consultor'))
+                                        <th class="text-center align-middle text-azul-claro" scope="col">
                                             ACCIÓN</th>
-                                    @endcan
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
@@ -165,7 +172,7 @@
                                         </td>
 
                                         {{-- Estos botones sólo se le muestran al Administrador --}}
-                                        @can('Administrador')
+                                        @if (auth()->user()->hasRole('Administrador'))
                                             <td class="text-center">
                                                 <a href="{{ route('admin.bookings.edit', $reserva->id) }}"><i
                                                         class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
@@ -173,18 +180,25 @@
 
                                             <td class="text-center" style=" width: 4%; ">
                                                 {{-- El id del formulario está formado por la frase 'delete-form-' más el id de la reserva utilizado para identificar al registro que se va a eliminar --}}
-                                                <form action="{{ route('admin.bookings.destroy', $reserva) }}" method="POST"
-                                                    style="display:inline;" id="delete-form-{{ $reserva->id }}">
+                                                <form action="{{ route('admin.bookings.destroy', $reserva) }}"
+                                                    method="POST" style="display:inline;"
+                                                    id="delete-form-{{ $reserva->id }}">
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button type="button" onclick="confirmDelete({{ $reserva->id }})"
+                                                    <button type="button"
+                                                        onclick="confirmDelete({{ $reserva->id }})"
                                                         style="border:none; background:none; color:rgb(25, 134, 236);">
                                                         <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                                     </button>
                                                 </form>
                                             </td>
-                                        @endcan
+                                        @elseif(auth()->user()->hasRole('Editor'))
+                                            <td class="text-center">
+                                                <a href="{{ route('admin.bookings.edit', $reserva->id) }}"><i
+                                                        class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -204,10 +218,12 @@
             @else
                 {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
                 @include('admin.index')
-            @endcan
+            @endif
         @else
             <div class="card-body">
-                @can('Consultor')
+                @if (auth()->user()->hasRole('Administrador') ||
+                        auth()->user()->hasRole('Editor') ||
+                        auth()->user()->hasRole('Consultor'))
                     <div class="w-25 p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
                         <div class="row g-2 align-items-center">
                             <div class="col">
@@ -221,7 +237,7 @@
                         <p>No hay reservas para este apartamento.</p>
                         <p>O no hay coincidencias con la búsqueda.</p>
                     </div>
-                @endcan
+                @endif
             </div>
         @endif
     </div>

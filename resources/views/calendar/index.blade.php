@@ -10,7 +10,7 @@
 @section('content')
     <br>
     {{-- Podrá ver el calendario los usuarios con el rol de Consultor --}}
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor')|| auth()->user()->hasRole('Consultor'))
         {{-- Aquí se generará el calendario --}}
         <div class="container">
             <div id="calendar"></div>
@@ -18,7 +18,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 
 @stop
 

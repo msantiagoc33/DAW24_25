@@ -1,7 +1,7 @@
 <div class="container">
     {{-- Vista de todos los conceptos de factura --}}
     {{-- Pueden ser vistos por los usuarios con el rol de Consultor --}}
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         <div class="card">
             {{-- Muestra posibles mensajes --}}
             @if (session('success'))
@@ -30,17 +30,22 @@
                         <table class="table table-striped table-sm">
                             <tr>
                                 <th>Nombre</th>
-                                <th colspan="2" class="text-center">Acciones</th>
+                                {{-- Los botones de edición y eliminación sólo están disponibles para el Administrador --}}
+                                @if (auth()->user()->hasRole('Administrador'))
+                                    <th colspan="2" class="text-center">Acciones</th>
+                                @elseif(auth()->user()->hasRole('Editor'))
+                                    <th class="text-center">Accion</th>
+                                @endif
                             </tr>
                             @foreach ($conceptos as $concepto)
                                 <tr>
                                     <td>{{ $concepto->name }}</td>
                                     {{-- Los botones de edición y eliminación sólo están disponibles para el Administrador --}}
-                                    @can('Administrador')
-                                        <td class="text-center" width='10px'>
-                                            <a href="{{ route('admin.concepts.edit', $concepto) }}"><i
-                                                    class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
-                                        </td>
+                                    @if (auth()->user()->hasRole('Administrador'))
+                                    <td class="text-center" width='10px'>
+                                        <a href="{{ route('admin.concepts.edit', $concepto) }}"><i
+                                                class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                    </td>
                                         <td class="text-center" width='10px'>
                                             <form action="{{ route('admin.concepts.destroy', $concepto) }}" method="POST"
                                                 style="display:inline;" id="delete-form-{{ $concepto->id }}">
@@ -53,7 +58,12 @@
                                                 </button>
                                             </form>
                                         </td>
-                                    @endcan
+                                    @elseif(auth()->user()->hasRole('Editor'))
+                                        <td class="text-center" width='10px'>
+                                            <a href="{{ route('admin.concepts.edit', $concepto) }}"><i
+                                                    class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                        </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </table>
@@ -72,25 +82,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 
-    {{-- Script para mostrar modal emergente de confirmación de eleminación de registro --}}
-    <script>
-        function confirmDelete(conceptoId) {
-            Swal.fire({
-                title: '¿Estás seguro?',
-                text: "Esta acción no se puede deshacer.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Sí, eliminar',
-                cancelButtonText: 'Cancelar'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.getElementById('delete-form-' + conceptoId).submit();
-                }
-            });
-        }
-    </script>
+
 </div>

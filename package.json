@@ -23,6 +23,6 @@
         "@fullcalendar/list": "^6.1.15",
         "bootstrap-icons": "^1.11.3",
         "fullcalendar": "^6.1.15",
-        "sweetalert2": "^11.14.5"
+        "sweetalert2": "^11.6.13"
     }
 }

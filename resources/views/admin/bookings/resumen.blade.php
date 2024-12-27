@@ -7,7 +7,7 @@
     <div class="container">
         <br>
         {{-- Esta vista estará visible a los usuarios con el rol de Consultor --}}
-        @can('Consultor')
+        @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
             <div class="card">
                 <div class="card-header bg-rojo-claro text-center text-white fs-1">Resumen anual por apartamento</div>
                 <div class="card-body">
@@ -38,7 +38,7 @@
         @else
             {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
             @include('admin.index')
-        @endcan
+        @endif
     </div>
 @stop
 

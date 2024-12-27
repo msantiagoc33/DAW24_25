@@ -8,7 +8,7 @@
 
 @section('content')
     {{-- Sólo tendrán acceso a la edición de facturas los usuarios con el rol de Administrador --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         {{-- Vista de posibles mensajes --}}
         <div class="errores">
             @if ($errors->any())
@@ -134,7 +134,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

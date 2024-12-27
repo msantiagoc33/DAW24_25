@@ -8,7 +8,7 @@
 
 @section('content')
     {{-- Sólo los usuarios con el rol de Administrador acceden a esta vista --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         {{-- Mostrar posibles mensajes --}}
         <div class="errores">
             @if ($errors->any())
@@ -51,7 +51,8 @@
 
                 <div class="card-body">
                     <div class="form-group">
-                        <input type="text" name="name" class="form-control" value="{{ old('name', $platform->name) }}">
+                        <input type="text" name="name" class="form-control"
+                            value="{{ old('name', $platform->name) }}">
                         @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -70,7 +71,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

@@ -7,7 +7,7 @@
 
 @section('content')
     {{-- Tendrán acceso a la vista los usuarios con el rol de Consultor --}}
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         <div class="card">
             {{-- 
             Se utiliza la misma vista para ver en detalle una reserva actual o una reserva de histórico
@@ -113,7 +113,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

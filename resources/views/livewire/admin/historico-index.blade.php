@@ -22,9 +22,12 @@
         {{-- Si hay reservas históricas para mostrar --}}
         @if ($reservas->isNotEmpty())
             {{-- Lo podran ver los usuarios con el rol de Consultor --}}
-            @can('Consultor')
+            @if (auth()->user()->hasRole('Administrador') ||
+                    auth()->user()->hasRole('Editor') ||
+                    auth()->user()->hasRole('Consultor'))
                 <div class="card-body">
-                    <div class="w-75 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
+                    <div
+                        class="w-75 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
                         <div class="row g-2 align-items-center">
                             <div class="col">
                                 <select wire:model.live="selectedApartment"
@@ -37,8 +40,8 @@
                             </div>
 
                             <div class="col">
-                                <input type="text" class="form-control rounded shadow w-auto" wire:model.live="search"
-                                    placeholder="Buscar...">
+                                <input type="text" class="form-control rounded shadow w-auto"
+                                    wire:model.live="search" placeholder="Buscar...">
                             </div>
 
                             <div class="col">
@@ -124,26 +127,24 @@
             @else
                 {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
                 @include('admin.index')
-            @endcan
+            @endif
         @else
             <div class="card-body">
-                @can('Consultor')
-                    <div
-                        class="w-25 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
-                        <div class="row g-2 align-items-center">
-                            <div class="col">
-                                @if ($this->search !== '')
-                                    <button wire:click='clear' class="form-control rounded shadow w-auto">X</button>
-                                @endif
-                            </div>
+                <div
+                    class="w-25 bg-verde-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            @if ($this->search !== '')
+                                <button wire:click='clear' class="form-control rounded shadow w-auto">X</button>
+                            @endif
                         </div>
                     </div>
+                </div>
 
-                    <div class="card-footer text-center fs-2 text-gris-claro">
-                        <p>No hay reservas en el histórico para este apartamento.</p>
-                        <p>O no hay coincidencias con la búsqueda.</p>
-                    </div>
-                @endcan
+                <div class="card-footer text-center fs-2 text-gris-claro">
+                    <p>No hay reservas en el histórico para este apartamento.</p>
+                    <p>O no hay coincidencias con la búsqueda.</p>
+                </div>
             </div>
         @endcan
 </div>

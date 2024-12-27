@@ -1,7 +1,7 @@
 <div class="container">
     {{-- Vista que muestra todas las facturas filtradas por apartamento --}}
 
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         {{-- Muestra posibles mensajes --}}
         <div class="errores">
             @if ($errors->any())
@@ -137,7 +137,8 @@
                                 @php $contador = 1; @endphp
                                 @foreach ($facturas as $index => $factura)
                                     <tr>
-                                        <td class="text-center align-middle d-none d-sm-table-cell" style="width: 5%">{{  $index + 1 }}</td>
+                                        <td class="text-center align-middle d-none d-sm-table-cell" style="width: 5%">
+                                            {{ $index + 1 }}</td>
 
                                         <td class="text-nowrap text-center align-middle" style="width: 10%">
                                             {{ $factura->fecha }}
@@ -171,15 +172,16 @@
                                         </td>
 
                                         {{-- Botones de edición y eliminación sólo disponibles para usuario Administrador --}}
-                                        @can('Administrador')
+                                        @if (auth()->user()->hasRole('Administrador'))
                                             <td class="text-center align-middle" width='10px'>
                                                 <a href="{{ route('admin.facturas.edit', $factura->id) }}"><i
                                                         class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                             </td>
 
                                             <td class="text-center align-middle" width='10px'>
-                                                <form action="{{ route('admin.facturas.destroy', $factura) }}" method="POST"
-                                                    style="display:inline;" id="delete-form-{{ $factura->id }}">
+                                                <form action="{{ route('admin.facturas.destroy', $factura) }}"
+                                                    method="POST" style="display:inline;"
+                                                    id="delete-form-{{ $factura->id }}">
                                                     @csrf
                                                     @method('DELETE')
 
@@ -189,7 +191,12 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                        @endcan
+                                        @elseif (auth()->user()->hasRole('Editor'))
+                                            <td class="text-center align-middle" width='10px'>
+                                                <a href="{{ route('admin.facturas.edit', $factura->id) }}"><i
+                                                        class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -209,5 +216,5 @@
                 @endif
             </div>
         </div>
-    @endcan
+    @endif
 </div>

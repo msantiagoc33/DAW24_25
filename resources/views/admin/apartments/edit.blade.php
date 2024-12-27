@@ -10,7 +10,7 @@
 
 @section('content')
     {{-- Verificar que el usuario tenga el rol de Administrador  --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         <div class="erroresMensajes">
             {{-- Mostrar errores de validación si existen  --}}
             @if ($errors->any())
@@ -37,8 +37,8 @@
         </div>
         {{-- Formulario para editar los datos de un apartamento --}}
         <div class="card">
-            <div class="card-header">
-                <h5>Modificar apartamento {{ $apartment->name }}</h5>
+            <div class="card-header bg-azul-claro text-center text-white fs-1">
+                Modificar apartamento {{ $apartment->name }}
             </div>
             <form method="POST" action="{{ route('admin.apartments.update', $apartment->id) }}">
                 {{-- token de seguridad --}}
@@ -48,7 +48,8 @@
                 <div class="card-body">
                     {{-- Campo para editar el nombre del apartamento --}}
                     <div class="form-group">
-                        <input type="text" name="name" class="form-control" value="{{ old('name', $apartment->name) }}">
+                        <input type="text" name="name" class="form-control"
+                            value="{{ old('name', $apartment->name) }}">
                         @error('name')
                             <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -103,7 +104,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 
 @stop
 

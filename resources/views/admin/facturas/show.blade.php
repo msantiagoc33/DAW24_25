@@ -7,7 +7,7 @@
 
 @section('content')
     {{-- Sólo podrán ver esta vista los usuarios con el rol de Consultor --}}
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         <div class="card">
             <div class="card-header bg-azul-claro text-center text-white fs-1">
                 Ficha de factura
@@ -52,7 +52,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

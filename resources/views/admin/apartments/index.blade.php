@@ -37,7 +37,10 @@
         </div>
         <br>
         {{-- Verificación de permisos del usuario --}}
-        @can('Consultor')
+        @if (auth()->user()->hasRole('Administrador') ||
+                auth()->user()->hasRole('Editor') ||
+                auth()->user()->hasRole('Consultor') ||
+                auth()->user()->hasRole('Guest'))
             @if ($apartments->count())
                 {{-- Tabla que muestra la lista de apartamentos si existen registros --}}
                 <div class="card">
@@ -50,7 +53,8 @@
                     <div class="card-body">
                         {{-- Botón para crear un nuevo apartamento (solo visible para administradores) --}}
                         @can('Administrador')
-                            <a class="btn btn-info btn-sm float-left mb-3" href="{{ route('admin.apartments.create') }}">Nuevo</a>
+                            <a class="btn btn-info btn-sm float-left mb-3"
+                                href="{{ route('admin.apartments.create') }}">Nuevo</a>
                         @endcan
                         <br>
                         {{-- Tabla que muestra la lista de apartamentos --}}
@@ -62,7 +66,11 @@
                                     <th class="text-center">Descripción</th>
                                     <th class="text-center">Habitaciones</th>
                                     <th class="text-center">Huéspedes</th>
-                                    <th class="text-center" colspan="3">Acciones</th>
+                                    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
+                                        <th class="text-center" colspan="3">Acciones</th>
+                                    @elseif (auth()->user()->hasRole('Consultor'))
+                                        <th class="text-center" colspan="2">Acciones</th>
+                                    @endif
                                 </tr>
                                 @foreach ($apartments as $apartment)
                                     <tr>
@@ -71,22 +79,24 @@
                                         <td>{{ $apartment->description }}</td>
                                         <td class="text-center">{{ $apartment->rooms }}</td>
                                         <td class="text-center">{{ $apartment->capacidad }}</td>
-
-                                        <td class="text-center" width='10px'>
-                                            <a href="{{ route('admin.apartments.show', $apartment) }}"><i
-                                                    class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
-                                        </td>
+                                        @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
+                                            <td class="text-center" width='10px'>
+                                                <a href="{{ route('admin.apartments.show', $apartment) }}"><i
+                                                        class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
+                                            </td>
+                                        @endif
 
                                         {{-- Botones de edición y borrado de apartamento solo disponible para usuarios con el rol de Administrador --}}
-                                        @can('Administrador')
+                                        @if (auth()->user()->hasRole('Administrador'))
                                             <td class="text-center" width='10px'>
                                                 <a href="{{ route('admin.apartments.edit', $apartment) }}"><i
                                                         class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                             </td>
 
                                             <td class="text-center" width='10px'>
-                                                <form action="{{ route('admin.apartments.destroy', $apartment) }}" method="POST"
-                                                    style="display:inline;" id="delete-form-{{ $apartment->id }}">
+                                                <form action="{{ route('admin.apartments.destroy', $apartment) }}"
+                                                    method="POST" style="display:inline;"
+                                                    id="delete-form-{{ $apartment->id }}">
 
                                                     @csrf
                                                     @method('DELETE')
@@ -97,7 +107,11 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                        @endcan
+                                        @elseif (auth()->user()->hasRole('Consultor'))
+                                            <td class="text-center" width='10px'>
+                                                <a href="{{ route('admin.apartments.edit', $apartment) }}"><i
+                                                        class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                        @endif
                                     </tr>
                                 @endforeach
 
@@ -113,7 +127,7 @@
         @else
             {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
             @include('admin.index')
-        @endcan
+        @endif
     </div>
 @stop
 

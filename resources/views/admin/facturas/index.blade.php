@@ -8,14 +8,14 @@
 
 @section('content')
     <br>
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         <div class="container">
             @livewire('admin.facturas-index')
         </div>
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 
 @stop
 

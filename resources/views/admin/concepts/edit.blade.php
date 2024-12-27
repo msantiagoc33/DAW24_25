@@ -8,7 +8,7 @@
 
 @section('content')
     {{-- Sólo los usuarios con el rol de Aministrador puden editar conceptos --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         {{-- Vista de posibles mensajes --}}
         <div class="erroresMensaje">
             @if ($errors->any())
@@ -57,24 +57,25 @@
                     </div>
                 </form>
             </div>
-        @else
-            {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
-            @include('admin.index')
-        @endcan
-    @stop
+        </div>
+    @else
+        {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
+        @include('admin.index')
+    @endif
+@stop
 
-    @section('css')
-    @stop
+@section('css')
+@stop
 
-    @section('js')
+@section('js')
     {{-- Establece el foco en el campo concepto al cargar la página --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var inputField = document.getElementById('concepto');
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputField = document.getElementById('concepto');
 
-                // Establecer el foco y colocar el cursor al final
-                inputField.focus();
-                inputField.setSelectionRange(inputField.value.length, inputField.value.length);
-            });
-        </script>
-    @stop
+            // Establecer el foco y colocar el cursor al final
+            inputField.focus();
+            inputField.setSelectionRange(inputField.value.length, inputField.value.length);
+        });
+    </script>
+@stop

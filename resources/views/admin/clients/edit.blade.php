@@ -7,7 +7,7 @@
 
 @section('content')
     {{-- Sólo tendrán acceso a la edición de cliente los usuarios con el rol Administrador --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         <br>
         {{-- Se visualizan los posibles mensajes --}}
         <div class="erroresMensaje">
@@ -150,7 +150,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

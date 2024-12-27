@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+// Rule proporciona una forma programática de construir reglas de validación complejas. Te permite definir reglas de validación de manera más clara y dinámica en lugar de utilizar cadenas de texto largas y propensas a errores.
+use Illuminate\Validation\Rule;
+
 
 /**
  * Clase que contiene las reglas de validación para la creación y actualización de un rol.
@@ -35,7 +38,11 @@ class RoleRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                $isUpdating ? "unique:roles,name,' . $this->route('rol')->id" : 'unique:roles,name',
+                // Selecciona la regla apropiada dependiendo de si estás actualizando o creando un registro.
+                // Regla de validación única para el campo name de la tabla roles. Se excluye el rol actual para permitir la actualización.
+                $isUpdating 
+                    ? Rule::unique('roles','name')->ignore($this->route('rol')->id) 
+                    : 'unique:roles,name',
             ],
             'permissions' => 'required|array',
             'permissions.*' => 'exists:permisos,id',

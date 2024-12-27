@@ -26,7 +26,7 @@
 
     {{-- Comprobar si hay clientes para mostrar --}}
     @if ($clients->isEmpty())
-    {{-- Si no hay clientes o no hay resultado de búsqueda, se muestra este tarjeta --}}
+        {{-- Si no hay clientes o no hay resultado de búsqueda, se muestra este tarjeta --}}
         <div class="card">
             <div class="card-body">
                 @if ($this->search !== '')
@@ -39,20 +39,21 @@
             </div>
         </div>
     @else
-        {{-- Podrán ver la lista de clientes los usuarios con rol de Consultor --}}
-        @can('Consultor')
+        {{-- Podrán ver la lista de clientes los usuarios con rol de Consultor y Editor --}}
+        @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
             <div class="card">
                 <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
                     Lista de Clientes
                 </div>
 
                 <div class="card-body">
-                    <div class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
+                    <div
+                        class="w-75 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto">
                         <div class="row g-2 align-items-center">
 
                             <div class="col">
-                                <input type="text" class="form-control rounded shadow w-auto" wire:model.live="search"
-                                    placeholder="Buscar...">
+                                <input type="text" class="form-control rounded shadow w-auto"
+                                    wire:model.live="search" placeholder="Buscar...">
                             </div>
 
                             <div class="col">
@@ -91,19 +92,23 @@
                                     <th class="text-center">Dirección</th>
                                     <th class="text-center">DNI</th>
                                     <th class="text-center">Pais</th>
-                                    @can('Administrador')
+                                    @if (auth()->user()->hasRole('Administrador'))
                                         <th class="text-center" colspan="3">Acciones</th>
-                                    @elsecan('Consultor')
+                                    @elseif (auth()->user()->hasRole('Editor'))
+                                        <th class="text-center" colspan="2">Acciones</th>
+                                    @elseif('Consultor')
                                         <th class="text-center" colspan="1">Acción</th>
-                                    @endcan
+                                    @endif
                                 </tr>
                             </thead>
                             <tbody>
                                 @php $contador = 1; @endphp
                                 @foreach ($clients as $index => $cliente)
                                     <tr class="p-50">
-                                        <td class="text-center" style="width: 5%">{{ $index + 1 + ($clients->currentPage() - 1) * $clients->perPage()  }}</td>
-                                        <td class="text-left ml-2 text-nowrap" style="width: 15%">{{ $cliente->name }}</td>
+                                        <td class="text-center" style="width: 5%">
+                                            {{ $index + 1 + ($clients->currentPage() - 1) * $clients->perPage() }}</td>
+                                        <td class="text-left ml-2 text-nowrap" style="width: 15%">{{ $cliente->name }}
+                                        </td>
                                         <td class="text-center ml-2 text-nowrap" style="width: 8%">{{ $cliente->phone }}
                                         </td>
                                         @if ($cliente->calle_numero)
@@ -128,22 +133,24 @@
 
                                         </td>
                                         <td class="text-center ml-2" style="width: 8%">{{ $cliente->passport }}</td>
-                                        <td class="text-center ml-2" style="width: 15%">{{ $cliente->pais->nombre }}</td>
+                                        <td class="text-center ml-2" style="width: 15%">{{ $cliente->pais->nombre }}
+                                        </td>
 
                                         <td class="text-center" style="width: 3%">
                                             <a href="{{ route('admin.clients.show', $cliente->id) }}"><i
                                                     class="fas fa-fw fa-regular fa-eye text-verde-claro"></i></a>
                                         </td>
                                         {{-- Los botones de editar y eliminar sólo para el Administrador --}}
-                                        @can('Administrador')
+                                        @if (auth()->user()->hasRole('Administrador'))
                                             <td class="text-center" style="width: 3%">
                                                 <a href="{{ route('admin.clients.edit', $cliente->id) }}"><i
                                                         class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
                                             </td>
 
                                             <td class="text-center" style="width: 3%">
-                                                <form action="{{ route('admin.clients.destroy', $cliente) }}" method="POST"
-                                                    style="display:inline;" id="delete-form-{{ $cliente->id }}">
+                                                <form action="{{ route('admin.clients.destroy', $cliente) }}"
+                                                    method="POST" style="display:inline;"
+                                                    id="delete-form-{{ $cliente->id }}">
                                                     @csrf
                                                     @method('DELETE')
 
@@ -153,7 +160,12 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                        @endcan
+                                        @elseif (auth()->user()->hasRole('Editor'))
+                                            <td class="text-center" style="width: 3%">
+                                                <a href="{{ route('admin.clients.edit', $cliente->id) }}"><i
+                                                        class="fas fa-fw fa-regular fa-pen text-amarillo-claro"></i></a>
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -168,6 +180,6 @@
         @else
             {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
             @include('admin.index')
-        @endcan
+        @endif
     @endif
 </div>

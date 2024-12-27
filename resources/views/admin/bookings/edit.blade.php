@@ -8,7 +8,7 @@
 
 @section('content')
     {{-- La edición de la reserva sólo estará accesible a los usuarios con rol Administrador --}}
-    @can('Administrador')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
         <br>
         {{-- Muestra los posibles mensajes --}}
         <div class="erroresMensajes">
@@ -161,7 +161,7 @@
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

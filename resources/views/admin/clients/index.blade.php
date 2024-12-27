@@ -8,12 +8,13 @@
 
 @section('content')
     <br>
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor'))
+        {{-- Mostrar la vista de clientes --}}
         @livewire('admin.clients-index')
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 
 @stop
 

@@ -4,13 +4,13 @@
 
 @section('content_header')
     <br>
-    @can('Consultor')
+    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
         {{-- Carga el componente fiscalidad --}}
         @livewire('admin.fiscalidad')
     @else
         {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
         @include('admin.index')
-    @endcan
+    @endif
 @stop
 
 @section('css')

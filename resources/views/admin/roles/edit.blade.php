@@ -63,7 +63,7 @@
                         <label for="permissions">
                             <h2>Permisos</h2>
                         </label>
-                        <div class="grid-container" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="grid-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
                             @foreach ($permisos as $permiso)
                                 <div>
                                     <label>

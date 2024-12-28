@@ -37,7 +37,16 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('Consultor');
         });
 
-
+        Gate::define('Invitado', function (User $user) {
+            return $user->hasRole('Invitado');
+        });
+        
+        // Definir una puerta que se llama acceso para todos los usuarios que tengan el permiso de vista.reservas
+        // En este caso son: Administrador, Editor y Consultor
+        // Invitado no tiene acceso a la vista de reservas
+        Gate::define('acceso', function ($user) {
+            return $user->hasPermission('vista.reservas');
+        });
         
     }
 }

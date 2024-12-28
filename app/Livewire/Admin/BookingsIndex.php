@@ -44,7 +44,7 @@ class BookingsIndex extends Component
      */
     protected $queryString = [
         'search' => ['except' => ''],
-        'porPagina' => ['except' => '5'],
+        'porPagina' => ['except' => '10'],
     ];
 
     /**
@@ -59,7 +59,7 @@ class BookingsIndex extends Component
      * 
      * @var string
      */
-    public $porPagina = '5';
+    public $porPagina = '10';
 
     /**
      * Propiedad para almacenar el número de página actual.
@@ -105,7 +105,7 @@ class BookingsIndex extends Component
     public function clear()
     {
         $this->search = '';
-        $this->porPagina = '5';
+        $this->porPagina = '10';
         $this->page = 1;
         $this->selectedApartment = $this->apartamentos->first()->id ?? null; // Reestablece al primer apartamento disponible
     }

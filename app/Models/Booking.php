@@ -85,4 +85,5 @@ class Booking extends Model
     {
         return $this->belongsTo(Apartment::class, 'apartment_id', 'id');
     }
+
 }

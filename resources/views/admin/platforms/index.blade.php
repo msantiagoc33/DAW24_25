@@ -12,7 +12,7 @@
     @if (auth()->user()->hasRole('Administrador') ||
             auth()->user()->hasRole('Editor') ||
             auth()->user()->hasRole('Consultor') ||
-            auth()->user()->hasRole('Guest'))
+            auth()->user()->hasRole('Invitado'))
         <br>
         {{-- Comprueba si hay plataformas que mostrar --}}
         @if ($platforms->count())

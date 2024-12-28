@@ -127,4 +127,6 @@ class User extends Authenticatable implements AuthorizableContract
     {
         return $this->roles()->where('name', $roleName)->exists();
     }
+
+
 }

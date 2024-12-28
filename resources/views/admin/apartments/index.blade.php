@@ -40,7 +40,7 @@
         @if (auth()->user()->hasRole('Administrador') ||
                 auth()->user()->hasRole('Editor') ||
                 auth()->user()->hasRole('Consultor') ||
-                auth()->user()->hasRole('Guest'))
+                auth()->user()->hasRole('Invitado'))
             @if ($apartments->count())
                 {{-- Tabla que muestra la lista de apartamentos si existen registros --}}
                 <div class="card">

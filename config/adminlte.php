@@ -137,7 +137,7 @@ return [
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => true,
-    'usermenu_desc' => false, 
+    'usermenu_desc' => false,
     'usermenu_profile_url' => false,
 
 
@@ -310,19 +310,21 @@ return [
             'text' => 'Reservas',
             'route' => 'admin.bookings.index',
             'icon' => 'fas fa-fw fa-address-book',
-            // 'can' => 'Consultor',
+            'can' => 'acceso', // Nombre del gate definido en AppServiceProvider
         ],
         [
             'text' => 'Calendario',
             'route' => 'calendar.index',
             'icon' => 'fa-solid fa-calendar-days',
-            // 'can' => 'Consultor',
+            'can' => 'acceso',
+
         ],
         [
             'text' => 'Histórico',
             'route' => 'admin.bookings.historico',
             'icon' => 'fas fa-fw fa-landmark',
-            // 'can' => 'Consultor',
+            'can' => 'access-reservas',
+
         ],
         [
             'text' => 'Usuarios',
@@ -342,43 +344,43 @@ return [
             'text' => 'Apartamentos',
             'route' => 'admin.apartments.index',
             'icon' => 'fa-solid fa-building',
-            // 'can' => 'Consultor',
+
         ],
         [
             'text' => 'Plataformas',
             'route' => 'admin.platforms.index',
             'icon' => 'fas fa-fw fa-layer-group',
-            // 'can' => 'Consultor',
+
         ],
         [
             'text' => 'Clientes',
             'route' => 'admin.clients.index',
             'icon' => 'fas fa-users fa-fw',
-            'can' => 'Editor',
+            'can' => 'acceso',
         ],
         [
             'text' => 'Conceptos de factura',
             'route' => 'admin.concepts.index',
             'icon' => 'fas fa-fw fa-file-invoice',
-            // 'can' => 'Editor',
+            'can' => 'acceso',
         ],
         [
             'text' => 'Gastos',
             'route' => 'admin.facturas.index',
             'icon' => 'fas fa-fw fa-file-invoice-dollar',
-            // 'can' => 'Editor',
+            'can' => 'acceso',
         ],
         [
             'text' => 'Resumen anual',
             'route' => 'admin.bookings.resumen',
             'icon' => 'fas fa-fw fa-file',
-            // 'can' => 'Consultor',
+            'can' => 'acceso',
         ],
         [
             'text' => 'IRPF',
             'route' => 'admin.bookings.fiscalidad',
             'icon' => 'fas fa-fw fa-comment-dollar',
-            // 'can' => 'Consultor',
+            'can' => 'acceso',
         ],
 
     ],

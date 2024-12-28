@@ -42,4 +42,5 @@ class Apartment extends Model
     {
         return $this->hasMany(Factura::class);
     }
+
 }

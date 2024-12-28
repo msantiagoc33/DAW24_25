@@ -267,7 +267,7 @@
                             reserva</a>
 
                     </div>
-                    <div class="card-footer text-center fs-2 text-gris-claro">
+                    <div class="card-footer text-center fs-2 text-gris-claro mt-5">
                         <p>No hay reservas para este apartamento.</p>
                     </div>
                 @endif

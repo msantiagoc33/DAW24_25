@@ -1,7 +1,9 @@
 <div class="container">
     {{-- Vista que muestra todas las facturas filtradas por apartamento --}}
 
-    @if (auth()->user()->hasRole('Administrador') || auth()->user()->hasRole('Editor') || auth()->user()->hasRole('Consultor'))
+    @if (auth()->user()->hasRole('Administrador') ||
+            auth()->user()->hasRole('Editor') ||
+            auth()->user()->hasRole('Consultor'))
         {{-- Muestra posibles mensajes --}}
         <div class="errores">
             @if ($errors->any())
@@ -95,16 +97,16 @@
                             <div class="form-group row">
                                 <div class="col-md-6">
                                     <label for="importe_desde">Importe desde:</label>
-                                    <input wire:model='importe_desde' type="number" id="importe_desde" name="importe_desde"
-                                        class="form-control form-control-sm">
+                                    <input wire:model='importe_desde' type="number" id="importe_desde"
+                                        name="importe_desde" class="form-control form-control-sm">
                                     @error('importe_desde')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="importe_hasta">Importe hasta:</label>
-                                    <input wire:model='importe_hasta' type="number" id="importe_hasta" name="importe_hasta"
-                                        class="form-control form-control-sm">
+                                    <input wire:model='importe_hasta' type="number" id="importe_hasta"
+                                        name="importe_hasta" class="form-control form-control-sm">
                                     @error('importe_hasta')
                                         <div class="text-danger">{{ $message }}</div>
                                     @enderror
@@ -144,7 +146,8 @@
                                             {{ $factura->fecha }}
                                         </td>
 
-                                        <td class="text-right mr-3 align-middle" style="width: 10%">{{ $factura->importe }}
+                                        <td class="text-right mr-3 align-middle" style="width: 10%">
+                                            {{ $factura->importe }}
                                         </td>
 
                                         <td style="width: 30%" class="align-middle">
@@ -185,7 +188,8 @@
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button type="button" onclick="confirmDelete({{ $factura->id }})"
+                                                    <button type="button"
+                                                        onclick="confirmDelete({{ $factura->id }})"
                                                         style="border:none; background:none; color:rgb(25, 134, 236);">
                                                         <i class="fas fa-fw fa-trash text-rojo-claro"></i>
                                                     </button>
@@ -205,9 +209,40 @@
                     </div>
                 </div>
             @elseif ($apartamento)
-                <p>Este apartamento no tiene facturas asociadas.</p>
+                <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
+                    Facturas del Apartamento: {{ $apartamento->name }} <br>
+                    Este apartamento no tiene facturas asociadas.
+                </div>
+
+                <div
+                    class="mt-5 mb-5 w-75 bg-azul-claro p-2 rounded d-flex flex-column justify-content-center align-items-center mx-auto">
+                    <div class="row g-2 align-items-center w-50">
+                        <div class="col">
+                            <select wire:model.live="apartamentoSeleccionado" id="apartamento"
+                                class="w-100 form-control form-select bg-gris-claro text-black">
+                                <option value="1">Selecciona un apartamento...</option>
+                                @foreach ($apartamentos as $apto)
+                                    <option value="{{ $apto->id }}">{{ $apto->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <br>
+                            {{-- Botón de añadir nueva factura sólo para el usuario Administrador --}}
+                            @can('Administrador')
+                                <a class="btn btn-info btn-sm float-right mb-3"
+                                    href="{{ route('admin.facturas.create') }}">Nueva
+                                    factura</a>
+                            @endcan
+                        </div>
+                    </div>
+                </div>
             @else
-                <p>El apartamento no existe.</p>
+                <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
+                    El apartamento no existe.
+                    <div class="card-header bg-azul-claro text-center text-gris-claro fs-1">
             @endif
 
             <div class="card-footer">

@@ -42,7 +42,7 @@
 
         <div class="card">
             <div class="card-header bg-azul-claro text-center text-white fs-1">
-                <h5>Modificar usuario {{ $user->name }}</h5>
+                Modificar usuario {{ $user->name }}
             </div>
 
             <form action="{{ route('admin.users.update', $user->id) }}" method="post">

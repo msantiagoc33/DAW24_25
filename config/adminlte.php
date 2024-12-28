@@ -323,8 +323,7 @@ return [
             'text' => 'Histórico',
             'route' => 'admin.bookings.historico',
             'icon' => 'fas fa-fw fa-landmark',
-            'can' => 'access-reservas',
-
+            'can' => 'acceso',
         ],
         [
             'text' => 'Usuarios',
@@ -344,13 +343,11 @@ return [
             'text' => 'Apartamentos',
             'route' => 'admin.apartments.index',
             'icon' => 'fa-solid fa-building',
-
         ],
         [
             'text' => 'Plataformas',
             'route' => 'admin.platforms.index',
             'icon' => 'fas fa-fw fa-layer-group',
-
         ],
         [
             'text' => 'Clientes',

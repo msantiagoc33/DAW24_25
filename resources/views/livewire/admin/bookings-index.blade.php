@@ -32,7 +32,6 @@
 
         {{-- Comprueba si hay reservas para mostrar --}}
         @if ($reservas->isNotEmpty())
-
             {{-- Si tiene el rol de Consultor podrá ver la lista de reservas --}}
             @if (auth()->user()->hasRole('Administrador') ||
                     auth()->user()->hasRole('Editor') ||
@@ -219,6 +218,27 @@
                 {{-- Mostrar una vista con un mensaje que informa al usuario que no tiene acceso --}}
                 @include('admin.index')
             @endif
+
+            {{-- Aquí entrará cuando estemos haciendo una búsquda sin coincidencias --}}
+        @elseif($search != '')
+            @if (auth()->user()->hasRole('Administrador') ||
+                    auth()->user()->hasRole('Editor') ||
+                    auth()->user()->hasRole('Consultor'))
+                <div class="w-25 p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-3">
+                    <div class="row g-2 align-items-center">
+                        <div class="col">
+                            <button wire:click='clear'
+                                class="bg-azul-claro text-gris-claro form-control rounded shadow w-auto">X</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer text-center fs-2 text-gris-claro">
+                    <p>No hay coincidencias con la búsqueda.</p>
+                </div>
+            @endif
+
+            {{-- Aquí entrará cuando no haya datos en el apartamento escogido --}}
         @else
             <div class="card-body">
                 @if (auth()->user()->hasRole('Administrador') ||
@@ -232,15 +252,27 @@
                             </div>
                         </div>
                     </div>
+                    <div
+                        class="w-50 bg-azul-claro p-2 rounded d-flex justify-content-center align-itmes-center mx-auto mb-72">
+                        <select wire:model.live="selectedApartment"
+                            class="form-control text-gris-claro rounded shadow w-auto">
+                            <option value="1">Selecciona un apartamento</option>
+                            @foreach ($apartamentos as $apartamento)
+                                <option value="{{ $apartamento->id }}">{{ $apartamento->name }}</option>
+                            @endforeach
+                        </select>
 
+                        <a class="btn btn-info btn-sm ml-5 text-white fs-5"
+                            href="{{ route('admin.bookings.create') }}">Nueva
+                            reserva</a>
+
+                    </div>
                     <div class="card-footer text-center fs-2 text-gris-claro">
                         <p>No hay reservas para este apartamento.</p>
-                        <p>O no hay coincidencias con la búsqueda.</p>
                     </div>
                 @endif
             </div>
+
         @endif
     </div>
-
-
 </div>
